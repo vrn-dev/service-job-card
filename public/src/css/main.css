@@ -1,0 +1,51 @@
+html, body {
+    background-color: #ffffff;
+    color: #000;
+    font-family: 'Raleway', sans-serif;
+    font-weight: 200;
+    height: 100vh;
+    margin: 0;
+}
+
+.error {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-weight: bold;
+    border: 1px solid red;
+    background-color: #cbb956;
+    color: red;
+}
+
+.error ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.success {
+    font-weight: bold;
+    border: 1px solid greenyellow;
+    background-color: #2ab27b;
+    color: greenyellow;
+}
+
+.error,
+.success {
+    text-align: center;
+}
+
+.modal {
+    color: #000;
+    font-weight: bold;
+}
+
+input, label, textarea{
+    margin-top: 10px;
+}
+
+/*.dropdown-menu {*/
+    /*background-color: #3c3f41;*/
+/*}*/
+
+/*.navbar-nav > li > .dropdown-menu a{*/
+    /*color: #ffffff;*/
+/*}*/
