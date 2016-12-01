@@ -1,7 +1,7 @@
 @extends('layouts.master')
 
 @section('title')
-    Inventory Catalogue
+    Inventory Directory
 @endsection
 
 @section('content')
@@ -26,27 +26,24 @@
             <table class="table table-bordered catalogueTable">
                 <thead>
                     <tr>
-                        <th rowspan="2" style="text-align: center">#</th>
-                        <th rowspan="2" style="text-align: center">Supplier Company</th>
-                        <th colspan="3" style="text-align: center">Product</th>
-                        <th rowspan="2" style="text-align: center">Actions</th>
-                    </tr>
-                    <tr>
-                        <th scope="col" style="text-align: center">Family</th>
-                        <th scope="col" style="text-align: center">Series</th>
-                        <th scope="col" style="text-align: center">Model</th>
+                        <th>#</th>
+                        <th>Machine Series</th>
+                        <th>Machine Model</th>
+                        <th>Machine Serial #</th>
+                        <th>Company</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
-                <tbody class="tbody-company">
-                    @foreach($catalogue as $item)
-                    <tr class="catalogue-row" data-catalogueid="{{ $item->catalogue_Id }}">
-                        <td>{{ $item->catalogue_Id }}</td>
-                        <th scope="row">{{ $item->supplier_Company }}</th>
-                        <td>{{ $item->product_Family }}</td>
-                        <td>{{ $item->product_Series }}</td>
-                        <td>{{ $item->product_Model }}</td>
+                <tbody class="tbody-inventory">
+                    @foreach($inventory as $item)
+                    <tr class="inventory-row" data-inventoryid="{{ $item->id }}">
+                        <td>{{ $item->id }}</td>
+                        <td>{{ $item->machine_series }}</td>
+                        <td>{{ $item->machine_model }}</td>
+                        <td>{{ $item->machine_serial }}</td>
+                        <td><a href="#" class="fa fa-eye see-co-details" aria-hidden="true" id="see-co-details-btn" data-companyid=""></a> {{ $item->company->companyName }}</td>
                         <td class="td-edit" align="center">
-                            <a href="#" class="fa fa-pencil catalgue-details-from-db" aria-hidden="true"
+                            <a href="#" class="fa fa-pencil inventory-details-from-db" aria-hidden="true"
                                id="edit-catalogue-btn" data-companyid=""></a>
                             <a href="#" class="fa fa-trash" style="color: red" aria-hidden="true"></a>
                         </td>
@@ -60,7 +57,6 @@
     </div> <!-- row div -->
     </div> <!-- container div -->
 
-
     <!-- Add Catalogue Modal -->
     <div class="modal fade" tabindex="-1" role="dialog" id="add-modal">
         <div class="modal-dialog" role="document">
@@ -69,7 +65,7 @@
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                     <h4 class="modal-title">Add Company</h4>
                 </div>
-                <form action="{{ route('catalogue.create') }}" method="POST">
+                <form action="{{ route('inventory.create') }}" method="POST">
                 <div class="modal-body">
                     <div class="form-group">
 
