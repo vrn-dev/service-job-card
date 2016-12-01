@@ -40,7 +40,24 @@ class InventoryController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $this->validate($request, [
+            'machine-series' => 'required',
+            'machine-model' => 'required',
+            'machine-serial' => 'required|unique:inventories,machine_serial',
+            'company-id' => 'required',
+        ]);
+
+        $inventory = new Inventory();
+        $inventory->machine_series = $request['machine-series'];
+        $inventory->machine_model = $request['machine-model'];
+        $inventory->machine_serial = $request['machine-serial'];
+        $inventory->company_id = $request['company-id'];
+        $message = "There was an error in creating record";
+        if($inventory->save())
+        {
+            $message = "Record was successfully created";
+        }
+        return redirect()->route('inventory.index')->with(['message' => $message]);
     }
 
     /**

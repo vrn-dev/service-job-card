@@ -70,7 +70,7 @@
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                     <h4 class="modal-title">Add Company Inventory</h4>
                 </div>
-                <form action="{{ route('inventory.create') }}" method="POST">
+                <form action="{{ route('inventory.store') }}" method="POST">
                 <div class="modal-body">
                     <div class="form-group">
 
@@ -87,18 +87,13 @@
                         <label for="machine-model">Select Machine Model:</label>
                         <select class="form-control machine-model" name="machine-model" id="machine-model" {{ $errors->has('machine-model') ? 'has-error' : '' }} required autofocus>
                             <option value="" selected> === Select a Model === </option>
-                            {{--<option value="UX-B160W"> UX-B160W </option>
-                            <option value="UX-D160W"> UX-D160W </option>
-                            <option value="PXR-D"> PXR-D </option>
-                            <option value="PXR-P"> PXR-P </option>
-                            <option value="PXR-H"> PXR-H </option>--}}
                         </select>
 
                         <label for="machine-serial">Select Machine Serial #:</label>
-                        <input type="text" class="form-control" placeholder="Enter Machine Serial #" {{ $errors->has('machine-serial') ? 'has-error' : '' }} required>
+                        <input type="text" name="machine-serial" class="form-control" maxlength="10" placeholder="Enter Machine Serial #" {{ $errors->has('machine-serial') ? 'has-error' : '' }} required>
 
-                        <label for="company-name">Select Assigned Company: </label>
-                        <select name="company-name" id="company-name" class="form-control" {{ $errors->has('company-name') ? 'has-error' : '' }} required>
+                        <label for="company-id">Select Assigned Company: </label>
+                        <select name="company-id" id="company-id" class="form-control" {{ $errors->has('company-id') ? 'has-error' : '' }} required>
                             @foreach($companies as $co)
                                 <option value="{{ $co->id }}">{{ $co->companyName }}</option>
                             @endforeach
@@ -115,7 +110,7 @@
             </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
-    <!-- Add Company Modla -->
+    <!-- Add Company Modal -->
 
     <!-- Edit Company Modal -->
    {{-- <div class="modal fade" tabindex="-1" role="dialog" id="edit-modal">
