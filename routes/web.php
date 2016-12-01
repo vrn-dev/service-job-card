@@ -73,9 +73,9 @@ Route::group(['middleware' => ['web']], function ()
         'middleware' => 'auth'
     ]);
 
-    //Inventory Catalogue Controllers
+    //Inventory Controllers
 
-    Route::resource('catalogue', 'CatalogueController');
+    Route::resource('/inventory', 'InventoryController');
 
 
 });
