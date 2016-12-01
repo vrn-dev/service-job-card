@@ -13,7 +13,7 @@
 
            <!-- Add Catalogue Btn -->
             <div class="pull-right">
-                <a href="#" class="btn btn-primary" id="add-co-btn"><i class="fa fa-plus"></i> Add Inventory Catalogue</a>
+                <a href="#" class="btn btn-primary" id="add-inv-btn"><i class="fa fa-plus"></i> Add Inventory Catalogue</a>
             </div>
             <!-- Add Catalogue Btn -->
 
@@ -45,7 +45,7 @@
                         <td class="td-edit" align="center">
                             <a href="#" class="fa fa-pencil inventory-details-from-db" aria-hidden="true"
                                id="edit-catalogue-btn" data-companyid=""></a>
-                            <a href="#" class="fa fa-trash" style="color: red" aria-hidden="true"></a>
+                            <a href="#" class="fa fa-trash" style="color: red" aria-hidden="true"></a> {{-- Delete Record, insert the route logic later --}}
                         </td>
                     </tr>
                     @endforeach
@@ -57,40 +57,52 @@
     </div> <!-- row div -->
     </div> <!-- container div -->
 
-    <!-- Add Catalogue Modal -->
+    {{--<div> <!-- test div -->
+        <p>No of companies: </p>
+        {{ $count = \App\Company::count() }}
+    </div> <!-- test div -->--}}
+
+    <!-- Add Inventory Modal -->
     <div class="modal fade" tabindex="-1" role="dialog" id="add-modal">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title">Add Company</h4>
+                    <h4 class="modal-title">Add Company Inventory</h4>
                 </div>
                 <form action="{{ route('inventory.create') }}" method="POST">
                 <div class="modal-body">
                     <div class="form-group">
 
-                        <label for="supplier_Company">Select Manufacturer:</label>
-                        <select class="form-control" name="supplier_Company" id="supplier_Company" {{ $errors->has('supplier_Company') ? 'has-error' : '' }}>
-                            <option value="Hitachi" selected> Hitachi</option>
+                        <label for="machine-series">Select Machine Series:</label>
+                        <select class="form-control machine-series" name="machine-series" id="machine-series" {{ $errors->has('machine-series') ? 'has-error' : '' }} required autofocus>
+                            <option value="" selected> === Select a Series === </option>
+                            <option value="UX" data-series="UX"> UX </option>
+                            <option value="RX2" data-series="RX2"> RX2 </option>
+                            <option value="PXR-D" data-series="PXR-D"> PXR-D </option>
+                            <option value="PXR-P" data-series="PXR-P"> PXR-P </option>
+                            <option value="PXR-H" data-series="PXR-H"> PXR-H </option>
                         </select>
 
-                        <label for="product_Family">Select Family:</label>
-                        <select class="form-control" name="product_Family" id="product_Family" {{ $errors->has('product_Family') ? 'has-error' : '' }}>
-                            <option value="Ink Jet Printer" selected> Ink Jet Printer</option>
+                        <label for="machine-model">Select Machine Model:</label>
+                        <select class="form-control machine-model" name="machine-model" id="machine-model" {{ $errors->has('machine-model') ? 'has-error' : '' }} required autofocus>
+                            <option value="" selected> === Select a Model === </option>
+                            {{--<option value="UX-B160W"> UX-B160W </option>
+                            <option value="UX-D160W"> UX-D160W </option>
+                            <option value="PXR-D"> PXR-D </option>
+                            <option value="PXR-P"> PXR-P </option>
+                            <option value="PXR-H"> PXR-H </option>--}}
                         </select>
 
-                        <label for="product_Series">Select Product Series:</label>
-                        <select class="form-control" name="product_Series" id="product_Series" {{ $errors->has('product_Series') ? 'has-error' : '' }}  required autofocus>
-                            <option value="" selected> === Select Series ===</option>
-                            <option value="UX"> UX-Series </option>
-                            <option value="RX2"> RX2-Series </option>
-                            <option value="PXR"> PXR-Series </option>
-                            <option value="PXR"> PXR-Series </option>
+                        <label for="machine-serial">Select Machine Serial #:</label>
+                        <input type="text" class="form-control" placeholder="Enter Machine Serial #" {{ $errors->has('machine-serial') ? 'has-error' : '' }} required>
+
+                        <label for="company-name">Select Assigned Company: </label>
+                        <select name="company-name" id="company-name" class="form-control" {{ $errors->has('company-name') ? 'has-error' : '' }} required>
+                            @foreach($companies as $co)
+                                <option value="{{ $co->id }}">{{ $co->companyName }}</option>
+                            @endforeach
                         </select>
-
-                        <input type="text" class="form-control" name="product_Model" id="product_Model" placeholder="Enter Model#" {{ $errors->has('product_Model') ? 'has-error' : '' }}>
-
-
                         <input type="hidden" name="_token" value="{{ Session::token() }}">
                     </div>
 

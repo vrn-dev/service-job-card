@@ -79,3 +79,65 @@ $('#edit-modal-save').on('click', function () {
         });//send new data to the updated table without refreshing
 });
 
+// << inventory directory JS >>
+// Open Add Modal
+$('#add-inv-btn').on('click', function(){
+    $('#add-modal').modal();
+});
+
+// Add modal Series selector
+$(document).ready(function () {
+    $(".machine-series").change(function () {
+        var machine_series = $(this).val();
+        if (machine_series == 'UX')
+        {
+            $('.machine-model').html("" +
+                "<option value=\"UX-B160W\"> UX-B160W </option>" +
+                "<option value=\"UX-D160W\"> UX-D160W </option>");
+        }
+        if (machine_series == 'RX2')
+        {
+            $('.machine-model').html("" +
+                "<option value=\"RX2-SD160W\"> RX2-SD160W </option>" +
+                "<option value=\"RX2-BD160W\"> RX2-BD160W </option>");
+        }
+        if (machine_series == 'PXR-D')
+        {
+            $('.machine-model').html("" +
+                "<option value=\"PXR-D460W\"> PXR-D460W </option>" +
+                "<option value=\"PXR-D440W\"> PXR-D440W </option>" +
+                "<option value=\"PXR-D450W\"> PXR-D450W </option>" +
+                "<option value=\"PXR-D410W\"> PXR-D410W </option>" +
+                "<option value=\"PXR-D261W\"> PXR-D261W </option>" +
+                "<option value=\"PXR-D242W\"> PXR-D242W </option>" +
+                "<option value=\"PXR-D253W\"> PXR-D253W </option>" +
+                "<option value=\"PXR-D214W\"> PXR-D214W </option>");
+        }
+        if (machine_series == 'PXR-P')
+        {
+            $('.machine-model').html("" +
+                "<option value=\"PXR-P460W\"> PXR-P460W </option>" +
+                "<option value=\"PXR-P440W\"> PXR-P440W </option>" +
+                "<option value=\"PXR-P450W\"> PXR-P450W </option>" +
+                "<option value=\"PXR-P410W\"> PXR-P410W </option>" +
+                "<option value=\"PXR-P261W\"> PXR-P261W </option>" +
+                "<option value=\"PXR-P242W\"> PXR-P242W </option>" +
+                "<option value=\"PXR-P253W\"> PXR-P253W </option>" +
+                "<option value=\"PXR-P214W\"> PXR-P214W </option>");
+        }
+        if (machine_series == 'PXR-H')
+        {
+            $('.machine-model').html("" +
+                "<option value=\"PXR-H460W\"> PXR-H460W </option>" +
+                "<option value=\"PXR-H440W\"> PXR-H440W </option>" +
+                "<option value=\"PXR-H450W\"> PXR-H450W </option>" +
+                "<option value=\"PXR-H410W\"> PXR-H410W </option>" +
+                "<option value=\"PXR-H261W\"> PXR-H261W </option>" +
+                "<option value=\"PXR-H242W\"> PXR-H242W </option>" +
+                "<option value=\"PXR-H253W\"> PXR-H253W </option>" +
+                "<option value=\"PXR-H214W\"> PXR-H214W </option>");
+        }
+    });
+
+});
+

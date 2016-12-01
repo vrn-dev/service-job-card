@@ -16,9 +16,10 @@ class InventoryController extends Controller
     public function index()
     {
         $inventory = Inventory::orderBy('id','asc')->get();
+        $companies = Company::orderBy('companyName','asc')->get();
         //$inventory_co_Id = Inventory::where('id','=', )
         //$company = Company::where('id','=', $inventory_co_Id)->value('companyName');
-        return view('directory.inventory', ['inventory' => $inventory]);
+        return view('directory.inventory', ['inventory' => $inventory, 'companies' => $companies]);
     }
 
     /**
