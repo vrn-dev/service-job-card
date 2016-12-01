@@ -12,4 +12,9 @@ class Company extends Model
     {
         return $this->belongsTo('App\User');
     }
+
+    public function inventory()
+    {
+        return $this->hasMany('App\Inventory');
+    }
 }

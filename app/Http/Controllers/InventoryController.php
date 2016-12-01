@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Company;
+use App\Inventory;
 use Illuminate\Http\Request;
 
 class InventoryController extends Controller
@@ -13,7 +15,10 @@ class InventoryController extends Controller
      */
     public function index()
     {
-        //
+        $inventory = Inventory::orderBy('id','asc')->get();
+        //$inventory_co_Id = Inventory::where('id','=', )
+        //$company = Company::where('id','=', $inventory_co_Id)->value('companyName');
+        return view('directory.inventory', ['inventory' => $inventory]);
     }
 
     /**

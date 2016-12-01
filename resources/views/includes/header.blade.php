@@ -16,13 +16,7 @@
                 <ul class="nav navbar-nav">
                     <li><a href="#">Job Cards <i class="fa fa-file-text" aria-hidden="true"></i></a></li>
                     <li><a href="{{ route('companyView') }}">Company Directory <i class="fa fa-address-book-o" aria-hidden="true"></i></a></li>
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Inventory Directory <span class="fa fa-database"></span></a>
-                        <ul class="dropdown-menu">
-                            <li><a href="#">Inventory List</a></li>
-                            <li><a href="{{ route('catalogue.index') }}">Inventory Catalogue</a></li>
-                        </ul>
-                    </li>
+                    <li><a href="{{ route('inventory.index') }}">Inventory <i class="fa fa-address-book-o" aria-hidden="true"></i></a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                     <li><a href="#">Welcome, {{ Auth::user()->name }}</a></li>
