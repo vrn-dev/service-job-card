@@ -5,40 +5,24 @@ namespace App\Http\Controllers;
 use App\Company;
 use App\Inventory;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+
 
 class InventoryController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+    public function getIndex(Request $request)
     {
-        $inventory = Inventory::orderBy('id','asc')->get();
+        $search = $request['search'];
+
+        $inventory = Inventory::where('machine_model','like', '%'.$search.'%')
+                        ->orWhere('company_name', 'like', '%'.$search.'%')
+                        ->orderBy('id','asc')->get();
         $companies = Company::orderBy('companyName','asc')->get();
-        //$inventory_co_Id = Inventory::where('id','=', )
-        //$company = Company::where('id','=', $inventory_co_Id)->value('companyName');
         return view('directory.inventory', ['inventory' => $inventory, 'companies' => $companies]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
+    public function postCreateInventory(Request $request)
     {
         $this->validate($request, [
             'machine-series' => 'required',
@@ -52,6 +36,7 @@ class InventoryController extends Controller
         $inventory->machine_model = $request['machine-model'];
         $inventory->machine_serial = $request['machine-serial'];
         $inventory->company_id = $request['company-id'];
+        $inventory->company_name = $inventory->company->companyName;
         $message = "There was an error in creating record";
         if($inventory->save())
         {
@@ -60,48 +45,15 @@ class InventoryController extends Controller
         return redirect()->route('inventory.index')->with(['message' => $message]);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
+    public function getInventoryDelete($inventory_id)
     {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
+        $inventory = Inventory::find($inventory_id);
+        if (Auth::user() != $inventory->user)
+        {
+            redirect()->back();
+        }
+        $inventory->delete();
+        return redirect()->route('inventory.index')->with(['message' => 'Record for '.$inventory->company->companyName.' was successfully deleted']);
     }
 }

@@ -75,7 +75,24 @@ Route::group(['middleware' => ['web']], function ()
 
     //Inventory Controllers
 
-    Route::resource('/inventory', 'InventoryController');
+    //Route::resource('/inventory', 'InventoryController');
+    Route::get('/inventory', [
+        'uses' => 'InventoryController@getIndex',
+        'as' => 'inventory.index',
+        'middleware' => 'auth'
+    ]);
+
+    Route::post('inventory/create', [
+        'uses' => 'InventoryController@postCreateInventory',
+        'as' => 'inventory.store',
+        'middleware' => 'auth'
+    ]);
+
+    Route::get('/inventory_delete/{inventory_id}', [
+        'uses' => 'InventoryController@getInventoryDelete',
+        'as' => 'inventory.delete',
+        'middleware' => 'auth'
+    ]);
 
 
 });

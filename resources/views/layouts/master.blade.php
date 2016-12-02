@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="{{ URL::to('src/css/main.css') }}">
     <link rel="stylesheet" href="{{ URL::to('src/fa/css/font-awesome.min.css') }}">
 
+
     @yield('styles')
 </head>
 <body>

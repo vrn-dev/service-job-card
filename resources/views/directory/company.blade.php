@@ -21,15 +21,17 @@
             <div>
                 <form action="{{ route('companyView') }}" class="navbar-form" method="get" role="search">
                     <div class="input-group">
-                        <input type="text" class="form-control" name="search" placeholder="Search by Co. Name">
-                        <span class="input-group-btn">
-                            <button class="btn btn-default-sm" type="submit">
-                                <i class="fa fa-search"></i>
-                            </button>
-                            <button class="btn btn-default-sm" type="submit">
-                                <i class="fa fa-times"></i>
-                            </button>
-                        </span>
+                        <input type="text" class="form-control" style="width: 300px" name="search" placeholder="Search by Company Name">
+                        <div class="input-group-btn" style="padding-top: 10px">
+                            <span class="input-group">
+                                <button class="btn btn-default-sm" type="submit">
+                                    <i class="fa fa-search"></i>
+                                </button>
+                                <button class="btn btn-default-sm" type="submit">
+                                    <i class="fa fa-times"></i>
+                                </button>
+                            </span>
+                        </div>
                     </div>
                 </form>
             </div>
@@ -109,7 +111,8 @@
                             <option value="Umm al-Quwain">Umm al-Quwain</option>
                             <option value="Ras al-Khaima">Ras al-Khaimah</option>
                             <option value="Fujairah">Fujairah</option>
-                        </select><label for="country">Select Country:</label>
+                        </select>
+                        <label for="country">Select Country:</label>
                         <select name="country" id="country" class="form-control" {{ $errors->has('country') ? 'has-error' : '' }}>
                             <option value="" selected> === Select Country ===</option>
                             <option value="Oman">Oman</option>

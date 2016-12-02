@@ -1,3 +1,4 @@
+//Company View Vars
 var companyId               = 0;
 var companyNameElement      = null;
 var contactNameElement      = null;
@@ -7,6 +8,8 @@ var contactEmailElement     = null;
 var cityElement             = null;
 var countryElement          = null;
 var addressElement          = null;
+
+
 
 // Open Modal
 $('#add-co-btn').on('click', function(){
@@ -80,6 +83,8 @@ $('#edit-modal-save').on('click', function () {
 });
 
 // << inventory directory JS >>
+
+
 // Open Add Modal
 $('#add-inv-btn').on('click', function(){
     $('#add-modal').modal();
@@ -139,5 +144,27 @@ $(document).ready(function () {
         }
     });
 
+});
+
+// Open Co Peek Modal and Poulate
+$('.see-co-details').on('click', function(){
+    $('#peek-modal').modal();
+    var peek_companyName = $(this).data('companyname');
+    var peek_contactName = $(this).data('contactname');
+    var peek_contactTel = $(this).data('contacttel');
+    var peek_contactMobile = $(this).data('contactmobile');
+    var peek_contactEmail = $(this).data('contactemail');
+    var peek_city = $(this).data('city');
+    var peek_country = $(this).data('country');
+    var peek_address = $(this).data('address');
+
+    $('.peek-modal-body #peek-co-name').html(peek_companyName);
+    $('.peek-modal-body #peek-contact-name').html(peek_contactName);
+    $('.peek-modal-body #peek-contact-tel').html(peek_contactTel);
+    $('.peek-modal-body #peek-contact-mobile').html(peek_contactMobile);
+    $('.peek-modal-body #peek-contact-email').html(peek_contactEmail);
+    $('.peek-modal-body #peek-city').html(peek_city);
+    $('.peek-modal-body #peek-country').html(peek_country);
+    $('.peek-modal-body #peek-address').html(peek_address);
 });
 

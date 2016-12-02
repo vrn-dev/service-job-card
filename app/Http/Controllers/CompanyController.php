@@ -6,9 +6,6 @@ use App\Company;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-
-
-
 class CompanyController extends Controller
 {
 //    public function __construct()

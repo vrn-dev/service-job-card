@@ -11,19 +11,38 @@
     <div class="row" style="padding-top: 50px">
         <div class="row" style="padding-bottom: 20px; padding-right: 20px">
 
-           <!-- Add Catalogue Btn -->
+           <!-- Add Inventory Btn -->
             <div class="pull-right">
-                <a href="#" class="btn btn-primary" id="add-inv-btn"><i class="fa fa-plus"></i> Add Inventory Catalogue</a>
+                <a href="#" class="btn btn-primary" id="add-inv-btn"><i class="fa fa-plus"></i> Add Inventory</a>
             </div>
-            <!-- Add Catalogue Btn -->
+            <!-- Add Inventory Btn -->
 
+            <!-- Serach -->
+            <div>
+                <form action="{{ route('inventory.index') }}" class="navbar-form" method="get" role="search">
+                    <div class="input-group">
+                        <input type="text" class="form-control" style="width: 300px" name="search" placeholder="Search by Model or Company">
+                        <div class="input-group-btn" style="padding-top: 10px">
+                            <span class="input-group">
+                                <button class="btn btn-default-sm" type="submit">
+                                    <i class="fa fa-search"></i>
+                                </button>
+                                <button class="btn btn-default-sm" type="submit">
+                                    <i class="fa fa-times"></i>
+                                </button>
+                            </span>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <!-- Serach -->
 
         </div>
 
 
         <!-- Table -->
         <div class="table-responsive">
-            <table class="table table-bordered catalogueTable">
+            <table class="table table-bordered inventory-table">
                 <thead>
                     <tr>
                         <th>#</th>
@@ -36,23 +55,30 @@
                 </thead>
                 <tbody class="tbody-inventory">
                     @foreach($inventory as $item)
-                    <tr class="inventory-row" data-inventoryid="{{ $item->id }}">
-                        <td>{{ $item->id }}</td>
+                    <tr class="inventory-row" data-inventory="{{ $item->id }}">
+                        <td class="inventory-row-item-id">{{ $item->id }}</td>
                         <td>{{ $item->machine_series }}</td>
                         <td>{{ $item->machine_model }}</td>
                         <td>{{ $item->machine_serial }}</td>
-                        <td><a href="#" class="fa fa-eye see-co-details" aria-hidden="true" id="see-co-details-btn" data-companyid=""></a> {{ $item->company->companyName }}</td>
+                        <td><a href="#" class="fa fa-eye see-co-details" aria-hidden="true" id="see-co-details-btn"
+                               data-companyid="{{ $item->company->id }}"
+                               data-companyname="{{ $item->company->companyName }}"
+                               data-contactname="{{ $item->company->contactName }}"
+                               data-contacttel="{{ $item->company->contactTel }}"
+                               data-contactmobile="{{ $item->company->contactMobile }}"
+                               data-contactemail="{{ $item->company->contactEmail }}"
+                               data-city="{{ $item->company->city }}"
+                               data-country="{{ $item->company->country }}"
+                               data-address="{{ $item->company->address }}"></a> {{ $item->company->companyName }}</td>
                         <td class="td-edit" align="center">
-                            <a href="#" class="fa fa-pencil inventory-details-from-db" aria-hidden="true"
-                               id="edit-catalogue-btn" data-companyid=""></a>
-                            <a href="#" class="fa fa-trash" style="color: red" aria-hidden="true"></a> {{-- Delete Record, insert the route logic later --}}
+                            <a href="{{ route('inventory.delete', ['inventory_id' => $item->id]) }}" class="fa fa-trash" style="color: red" aria-hidden="true"></a> {{-- Delete Record, insert the route logic later --}}
                         </td>
                     </tr>
                     @endforeach
                 </tbody>
             </table>
         </div>
-        <!-- Serach -->
+       
 
     </div> <!-- row div -->
     </div> <!-- container div -->
@@ -61,6 +87,7 @@
         <p>No of companies: </p>
         {{ $count = \App\Company::count() }}
     </div> <!-- test div -->--}}
+
 
     <!-- Add Inventory Modal -->
     <div class="modal fade" tabindex="-1" role="dialog" id="add-modal">
@@ -110,56 +137,78 @@
             </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
-    <!-- Add Company Modal -->
+    <!-- Add Inventory Modal -->
 
-    <!-- Edit Company Modal -->
-   {{-- <div class="modal fade" tabindex="-1" role="dialog" id="edit-modal">
+    <!-- Company Peek Modal -->
+    <div class="modal fade" tabindex="-1" role="dialog" id="peek-modal">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title">Edit Company</h4>
+                    <h4 class="modal-title">Company Details</h4>
                 </div>
-                <form>
-                    <div class="modal-body">
+                <div class="modal-body peek-modal-body">
+                    <form class="form-horizontal">
                         <div class="form-group">
-                            <input type="text" class="form-control" name="companyName" id="company-name-edit-modal" {{ $errors->has('companyName') ? 'has-error' : '' }}>
-                            <input type="text" class="form-control" name="contactName" id="contact-name-edit-modal">
-                            <input type="text" class="form-control" name="contactTel" id="contact-tel-edit-modal">
-                            <input type="text" class="form-control" name="contactMobile" id="contact-mobile-edit-modal">
-                            <input type="text" class="form-control" name="contactEmail" id="contact-email-edit-modal">
-                            <label for="city">Select City:</label>
-                            <select name="city" id="city-edit-modal" class="form-control">
-                                <option value="" selected> === Select City ===</option>
-                                <option value="Dubai">Dubai</option>
-                                <option value="Abu Dhabi">Abu Dhabi</option>
-                                <option value="Sharjah">Sharjah</option>
-                                <option value="Ajman">Ajman</option>
-                                <option value="Umma al-Quwain">Umm al-Quwain</option>
-                                <option value="Ras al-Khaimah">Ras al-Khaimah</option>
-                                <option value="Fujairah">Fujairah</option>
-                            </select><label for="country">Select Country:</label>
-                            <select name="country" id="country-edit-modal" class="form-control">
-                                <option value="" selected> === Select Country ===</option>
-                                <option value="Oman">Oman</option>
-                                <option value="UAE">United Arab Emirates</option>
-                            </select>
-                            <textarea name="address" id="address-edit-modal" rows="5" placeholder="Enter Address"></textarea>
+                            <label class="col-sm-3 control-label">Company Name</label>
+                            <div class="col-sm-9" style="padding-top: 10px">
+                                <p class="form-control-static" id="peek-co-name" style="font-weight: 300"> </p>
+                            </div>
                         </div>
-
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary" id="edit-modal-save">Save changes</button>
-                    </div>
-                </form>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">Contact Name</label>
+                            <div class="col-sm-9" style="padding-top: 10px">
+                                <p class="form-control-static" id="peek-contact-name" style="font-weight: 300"> </p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">Contact Tel</label>
+                            <div class="col-sm-9" style="padding-top: 10px">
+                                <p class="form-control-static" id="peek-contact-tel" style="font-weight: 300"> </p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">Contact Mobile</label>
+                            <div class="col-sm-9" style="padding-top: 10px">
+                                <p class="form-control-static" id="peek-contact-mobile" style="font-weight: 300"> </p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">Contact Email</label>
+                            <div class="col-sm-9" style="padding-top: 10px">
+                                <p class="form-control-static" id="peek-contact-email" style="font-weight: 300"> </p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">City</label>
+                            <div class="col-sm-9" style="padding-top: 10px">
+                                <p class="form-control-static" id="peek-city" style="font-weight: 300"> </p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">Country</label>
+                            <div class="col-sm-9" style="padding-top: 10px">
+                                <p class="form-control-static" id="peek-country" style="font-weight: 300"> </p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">Address</label>
+                            <div class="col-sm-9" style="padding-top: 10px">
+                                <p class="form-control-static" id="peek-address" style="font-weight: 300"> </p>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
             </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
-    <!-- Edit Company Modal -->
+    <!-- Add Inventory Modal -->
 
-    <script>
-        var edit_token = '{{ Session::token() }}';
-        var edit_url = '{{ route('edit.company') }}';
+    {{--<script>
+        var edit_inv_token = '{{ Session::token() }}';
+        var edit_inv_url = '{{ route('inventory.update', ['id' => ]) }}';
     </script>--}}
 @endsection

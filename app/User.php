@@ -22,4 +22,8 @@ class User extends Model implements Authenticatable
     {
         return $this->hasMany('App\Company');
     }
+    public function inventories()
+    {
+        return $this->hasMany('App\Inventory');
+    }
 }
