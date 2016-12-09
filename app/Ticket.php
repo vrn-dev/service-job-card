@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Inventory extends Model
+class Ticket extends Model
 {
     public function company()
     {
@@ -14,8 +14,8 @@ class Inventory extends Model
     {
         return $this->belongsTo('App\User');
     }
-    public function ticket()
+    public function inventory()
     {
-        return $this->hasMany('App\Ticket');
+        return $this->belongsTo('App\Inventory');
     }
 }

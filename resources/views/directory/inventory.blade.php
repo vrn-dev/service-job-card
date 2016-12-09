@@ -205,7 +205,7 @@
             </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
-    <!-- Add Inventory Modal -->
+    <!-- Inventory Peek Modal -->
 
     {{--<script>
         var edit_inv_token = '{{ Session::token() }}';

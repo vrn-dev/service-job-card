@@ -17,4 +17,9 @@ class Company extends Model
     {
         return $this->hasMany('App\Inventory');
     }
+
+    public function tickets()
+    {
+        return $this->hasMany('App\Ticket');
+    }
 }

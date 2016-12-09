@@ -17,6 +17,7 @@
                     <li><a href="#">Job Cards <i class="fa fa-file-text" aria-hidden="true"></i></a></li>
                     <li><a href="{{ route('companyView') }}">Company Directory <i class="fa fa-address-book-o" aria-hidden="true"></i></a></li>
                     <li><a href="{{ route('inventory.index') }}">Inventory <i class="fa fa-address-book-o" aria-hidden="true"></i></a></li>
+                    <li><a href="{{ route('ticket.index') }}">Generate Ticket <i class="fa fa-ticket" aria-hidden="true"></i></a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                     <li><a href="#">Welcome, {{ Auth::user()->name }}</a></li>

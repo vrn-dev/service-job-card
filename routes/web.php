@@ -94,6 +94,54 @@ Route::group(['middleware' => ['web']], function ()
         'middleware' => 'auth'
     ]);
 
+    //Ticket Routes
+    Route::get('/ticket', [
+        'uses' => 'TicketController@getIndex',
+        'as' => 'ticket.index',
+        'middleware' => 'auth'
+    ]);
+
+    Route::get('/ticket_autocomplete', [
+        'uses' => 'TicketController@getAutocomplete',
+        'as' => 'ticket.autocomplete',
+        'middleware' => 'auth'
+    ]);
+
+    Route::post('/ticket_json', [
+        'uses' => 'TicketController@sendJson',
+        'as' => 'ticket.sendJson',
+        'middleware' => 'auth'
+    ]);
+
+    Route::get('/ticket_getTicketId', [
+        'uses' => 'TicketController@ticketIdGen',
+        'as' => 'ticket.getTicketId',
+        'middleware' => 'auth'
+    ]);
+
+    Route::get('/ticket_popTable', [
+        'uses' => 'TicketController@popTable',
+        'as' => 'ticket.popTable',
+        'middleware' => 'auth'
+    ]);
+
+    Route::post('/ticket_create', [
+        'uses' => 'TicketController@postCreateTicket',
+        'as' => 'ticket.create',
+        'middleware' => 'auth'
+    ]);
+
+    /*Route::post('/ticket/peekmodal', [
+        'uses' => 'TicketController@postPeekModal',
+        'as' => 'ticket.postPeekModal',
+        'middleware' => 'auth'
+    ]);*/
+
+    Route::get('/ticket/peekmodal', [
+        'uses' => 'TicketController@getPeekModal',
+        'as' => 'ticket.getPeekModal',
+        'middleware' => 'auth'
+    ]);
 
 });
 
