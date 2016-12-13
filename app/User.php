@@ -30,4 +30,8 @@ class User extends Model implements Authenticatable
     {
         return $this->hasMany('App\Ticket');
     }
+    public function sjcs()
+    {
+        return $this->hasMany('App\Sjc');
+    }
 }

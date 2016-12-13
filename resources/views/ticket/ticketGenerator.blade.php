@@ -1,13 +1,20 @@
 @extends('layouts.master')
 
 @section('title')
-    Service Job Card Interface
+    Ticket Generator
 @endsection
-
+@section('styles')
+    <style>
+        td.highlight {
+            font-weight: bold;
+            color: blue;
+        }
+    </style>
+@endsection
 
 @section('content')
     @include('includes.message-block')
-    <h1>Service Job Card Interface</h1>
+    <h1>Ticket Generator</h1>
     <div class="container-fluid">
         <div class="row" style="padding-top: 50px">
             <div class="row" style="padding-bottom: 20px; padding-left: 20px">
@@ -18,7 +25,7 @@
                 <div class="collapse" id="createTicket">
                     <row>
                         <fieldset class="form-group">
-                            <form action="" class="form-group" method="POST">
+                            <form action="" class="form-group" method="POST" id="createTicketForm">
                                 <legend>Generate Ticket</legend>
                                 <row>
                                     <div class="col-md-6"> <!-- Generate Ticket Well Column 1-->
@@ -52,6 +59,8 @@
                                         <textarea name="issueDescription" id="issueDescription" style="width: 100%"
                                                   rows="5"></textarea>
 
+                                        <!-- TODO: Add AssignToUser and schedule Date-->
+
 
                                     </div> <!-- Generate Ticket Well Column 2-->
                                 </row>
@@ -77,7 +86,6 @@
                         <th>Date</th>
                         <th>Category</th>
                         <th>Status</th>
-                        <th>Actions</th>
                     </tr>
                     </thead>
                 </table>
@@ -87,7 +95,7 @@
 
 
     <!-- Ticket Peek Modal -->
-    <div class="modal fade" tabindex="-1" role="dialog" id="peek-modal">
+    <div class="modal fade" tabindex="-1" role="dialog" id="peek-modal"> <!-- TODO : Add assignedTo and scheduled date into modal-->
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -97,6 +105,7 @@
                 <div class="modal-body peek-modal-body">
                     <form class="form-horizontal">
                         <div class="form-group">
+
                             <label class="col-sm-3 control-label">Company Name</label>
                             <div class="col-sm-9" style="padding-top: 10px">
                                 <p class="form-control-static" id="peek-co-name" style="font-weight: 300"> </p>
@@ -141,12 +150,29 @@
                     </form>
                 </div>
                 <div class="modal-footer">
+                    <a href="#" class="btn btn-warning" id="createJobCardBtn">Create a Job Card</a>
+                    <a href="#" class="btn btn-danger" id="deleteTicketBtn">Delete this Ticket</a>
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                 </div>
             </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
     <!-- Ticket Peek Modal -->
+
+    <!-- Confirmation Modal -->
+    <div class="modal fade" tabindex="-1" role="dialog" id="delete-confirm-modal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <p id="delete-confirm-title"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" id="canelDelete">Cancel</button>
+                    <button type="button" class="btn btn-danger" id="confirmDelete">Delete</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.Confirmation modal -->
 
 
 @endsection
@@ -163,10 +189,19 @@
         var url_createTicket = "{{ route('ticket.create') }}";
         // var url_popPostPeekModal = " route('ticket.postPeekModal') }}";
         var url_popGetPeekModal = "{{ route('ticket.getPeekModal') }}";
+        var url_deleteTicket = "{{ route('ticket.getDeleteTicket') }}";
+        var url_sjcCreateForm = "{{ route('sjc.createForm') }}"; //TODO: Change route to jobCard
+
 
         $( "#ticketTable" ).tooltip({
             delay: 100
         });
+
+        // Set animation for blinker
+        function blinker() {
+            $('.blink').fadeOut(500).fadeIn(500);
+        }
+        setInterval(blinker, 1000);
 
         //chosen select plugin
         $('#selectCo').chosen({width: '100%'});
@@ -189,12 +224,13 @@
             //submit Create Ticket
             $('#createTicketSubmitBtn').on('click', function (e) {
                 e.preventDefault();
-                var companyId= $('#selectCo option:selected').val();
+                var companyId= $('#selectCo').find('option:selected').val();
                 //var companyName= $('#selectCo option:selected').text();
                 var assetId = $('input[name=assetCoRadio]:checked').val();
                 var issueDate = $('input[name=issueDate]').val();
-                var issueCatagory = $('#issueCategorySelect option:selected').val();
+                var issueCatagory = $('#issueCategorySelect').find('option:selected').val();
                 var issueDescription = $('#issueDescription').val();
+
                 /*console.log("Submit Co Id: "+companyId);
                 //console.log("Submit Co Name: "+companyName);
                 console.log("Submit Co Asset Id: "+assetId);
@@ -214,15 +250,22 @@
                     },
                     success: function () {
                         $('#ticketTable').DataTable().ajax.reload();
+                        /*$('#selectCo').val("");
+                        $('#assetCo').val("");
+                        $('#issueDate').val("");
+                        $('#issueCategorySelect').val("");
+                        $('#issueDescription').val("");*/
+                        $('#createTicket').collapse('toggle');
                         alert('Ticket was successfully generated');
+                        $('#assetCo').empty().html('<p style="color: lightgrey">No Inventories Listed - Please chose another company</p>');
+                        $('#selectCo').val('').trigger('chosen:updated');
+                        $('#ticketNumberField').val('');
+                        $('#issueDate').val("");
+                        $('#issueCategorySelect').val("").trigger('chosen:updated');
+                        $('#issueDescription').val("");
                     }
                 });
-                $('#selectCo').val("");
-                $('#assetCo').val("");
-                $('#issueDate').val("");
-                $('#issueCategorySelect').val("");
-                $('#issueDescription').val("");
-                $('#createTicket').collapse('toggle');
+
             });
 
             //populate company inventory info
@@ -257,7 +300,7 @@
             });
 
             //dataTables
-            table = $('#ticketTable').DataTable( {
+            var table = $('#ticketTable').DataTable( {
                 pageLength: 5,
                 lengthMenu: [5, 10, 25, 50],
                 ajax: {
@@ -268,25 +311,76 @@
                     { data: "id" },
                     { data: "company_name" },
                     { data: "issue_date" },
-                    { data: "issue_category" },
-                    { data: "status" },
-                    {
-                        "className": "dt-body-center",
-                        "data": null,
-                        "defaultContent": "<a class='fa fa-eye ticket-details-from-db' aria-hidden='true' id='edit-co-btn'></a> " +
-                        "<a href='#' class='fa fa-trash' style='color: red' aria-hidden='true'></a>"
+                ],
+                columnDefs: [{
+                    targets: 4,
+                    data: "status",
+                    render: function (data, type, full, meta) {
+                        if (data == "Active")
+                        {
+                            return '<span style="color: red">Active</span>'
+                        }
+                        else if (data == "Not Active")
+                        {
+                            return '<span style="color: green">Not Active</span>'
+                        }
+                        else
+                        {
+                            return '<span style="color: blue">No Data</span>'
+                        }
                     }
-                ]
+                },
+                    {
+                        targets: 3,
+                        data: "issue_category",
+                        render: function (data, type, full, meta) {
+                            if (data == 'Critical System Down')
+                            {
+                                return '<span class="blink" style="color: red">Critical System Down</span>'
+                            }
+                            else if (data == 'Critical')
+                            {
+                                return '<span style="color: red">Critical</span>'
+                            }
+                            else if (data == 'Major')
+                            {
+                                return '<span style="color: darkorange">Major</span>'
+                            }
+                            else if (data == 'Medium')
+                            {
+                                return '<span style="color: #D6C10D">Medium</span>'
+                            }
+                            else if (data == 'Minor')
+                            {
+                                return '<span style="color: darkviolet">Minor</span>'
+                            }
+                            else return '<span style="color: blue">No Data</span>'
+                        }
+                    }]
             });
 
+
+
+
+
             //Ticket Row info on Click
-            $('#ticketTable').on('click', 'tr', function () {
-                var rowData = table.row(this).data();
+            $('#ticketTable').off('click').on('click', 'tr', function () {
+                let rowData = table.row(this).data();
                 /*console.log(rowData);
                 console.log(rowData.company_name);
                 console.log(rowData.company_id);*/
-                var coId = rowData.company_id;
-                var ticketId = rowData.id;
+                let coId = rowData.company_id;
+                let ticketId = rowData.id;
+                let peekTicketId = null;
+                let peekTicketIssueDate = null;
+                let peekAddress = null;
+                let peekCoName = null; //
+                let peekInventoryModel = null; //
+                let peekInventorySerial = null; //
+                let peekIssueDescription = null;
+                let peekContactName = null; //
+                let peekContactMobile = null; //
+                let peekContactEmail = null;//
                 $.ajax({
                     method: "GET",
                     url: url_popGetPeekModal,
@@ -295,16 +389,19 @@
                         ticketId: ticketId
                     },
                     success: function (data) {
-                        /*console.log(data);
-                        console.log('Data.company.contactName = '+data.company.contactName);
+                        //console.log(data);
+                        /*console.log('Data.company.contactName = '+data.company.contactName);
                         console.log('Data.ticket.asset_model = '+data.ticket.asset_model);*/
-                        let peekCoName = data.company.companyName;
-                        let peekInventoryModel = data.ticket.asset_model;
-                        let peekInventorySerial = data.ticket.asset_serial;
-                        let peekIssueDescription = data.ticket.issue_details;
-                        let peekContactName = data.company.contactName;
-                        let peekContactMobile = data.company.contactMobile;
-                        let peekContactEmail = data.company.contactEmail;
+                        peekTicketId = data.ticket.id;
+                        peekTicketIssueDate = data.ticket.issue_date;
+                        peekAddress = data.company.address;
+                        peekCoName = data.company.companyName;
+                        peekInventoryModel = data.ticket.asset_model;
+                        peekInventorySerial = data.ticket.asset_serial;
+                        peekIssueDescription = data.ticket.issue_details;
+                        peekContactName = data.company.contactName;
+                        peekContactMobile = data.company.contactMobile;
+                        peekContactEmail = data.company.contactEmail;
 
                         $('#peek-co-name').html(peekCoName);
                         $('#peek-inventory-model').html(peekInventoryModel);
@@ -315,9 +412,47 @@
                         $('#peek-contact-email').html(peekContactEmail);
                     }
                 });
+                // Create Job Card sjc_form
                 $('#peek-modal').modal();
-            });
-            });
+                $('#createJobCardBtn').on('click', function () {
+                    let tickedId = '?ticketId='+ peekTicketId;
+                    location = url_sjcCreateForm + tickedId;
+                });
+
+                //Delete Ticket
+                $('#deleteTicketBtn').off('click').on('click', function (event) {
+                    event.preventDefault();
+                    let deleteTicketId = ticketId;
+                    $('#delete-confirm-modal').modal();
+                    $('#delete-confirm-title').html("Are you Sure you want to Delete Ticket # "+ deleteTicketId);
+                    $('#confirmDelete').off('click').on('click', function () {
+                        console.log('clicked ' + peekTicketId)
+                        $.ajax({
+                            method: "GET",
+                            url: url_deleteTicket,
+                            data: {
+                                ticketId: deleteTicketId
+                            },
+                            success: function () {
+                                $('#ticketTable').DataTable().ajax.reload();
+                                alert('Ticket # ' + deleteTicketId + ' Successfully Deleted')
+                                $('#delete-confirm-modal').modal('hide');
+                                $('#peek-modal').modal('hide');
+                            }
+                        });//ajax
+                    });//#confirm delete
+                });//Delete Ticket
+
+
+                    //console.log(deleteTicketId)
+                    /*if(confirm('Are your Sure you want to Delete Ticket #'+ deleteTicketId)) {
+
+                    }else {return false;}*/
+                });//Ticket Row info on Click
+            });//Document Ready
+
+            $('#make-sjc').tooltip();
+
 
 
 

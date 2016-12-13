@@ -14,7 +14,7 @@
 
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
-                    <li><a href="#">Job Cards <i class="fa fa-file-text" aria-hidden="true"></i></a></li>
+                    <li><a href="{{ route('sjc.index') }}">Job Cards <i class="fa fa-file-text" aria-hidden="true"></i></a></li>
                     <li><a href="{{ route('companyView') }}">Company Directory <i class="fa fa-address-book-o" aria-hidden="true"></i></a></li>
                     <li><a href="{{ route('inventory.index') }}">Inventory <i class="fa fa-address-book-o" aria-hidden="true"></i></a></li>
                     <li><a href="{{ route('ticket.index') }}">Generate Ticket <i class="fa fa-ticket" aria-hidden="true"></i></a></li>

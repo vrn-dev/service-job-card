@@ -143,5 +143,56 @@ Route::group(['middleware' => ['web']], function ()
         'middleware' => 'auth'
     ]);
 
+    Route::get('/ticket/delete', [
+        'uses' => 'TicketController@getDeleteTicket',
+        'as' => 'ticket.getDeleteTicket',
+        'middleware' => 'auth'
+    ]);
+
+    //SJC Routes
+
+    Route::get('/sjc/create_form/{ticketId?}', [
+        'uses' => 'SjcController@getSjcCreateForm',
+        'as' => 'sjc.createForm',
+        'middleware' => 'auth'
+    ]);
+
+    Route::get('/sjc', [
+        'uses' => 'SjcController@getSjcIndex',
+        'as' => 'sjc.index',
+        'middleware' => 'auth'
+    ]);
+
+    Route::post('/sjc/create_sjc', [
+        'uses' => 'SjcController@postCreateSjc',
+        'as' => 'sjc.createSjc',
+        'middleware' => 'auth'
+    ]);
+
+    Route::get('/sjc/pop_table', [
+        'uses' => 'SjcController@popTable',
+        'as' => 'sjc.popTable',
+        'middleware' => 'auth'
+    ]);
+
+    Route::get('/sjc/job_card', [
+        'uses' => 'SjcController@getJobCardIndex',
+        'as' => 'sjc.jobCard.index',
+        'middleware' => 'auth'
+    ]);
+
+    Route::post('/sjc/update_sjc', [
+        'uses' => 'SjcController@postSjcUpdate',
+        'as' => 'sjc.update',
+        'middleware' => 'auth'
+    ]);
+
+    Route::get('/sjc/delete', [
+        'uses' => 'SjcController@getSjcDelete',
+        'as' => 'sjc.delete',
+        'middleware' => 'auth'
+    ]);
+
+
 });
 

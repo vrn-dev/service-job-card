@@ -18,4 +18,8 @@ class Inventory extends Model
     {
         return $this->hasMany('App\Ticket');
     }
+    public function sjcs()
+    {
+        return $this->hasOne('App\Sjc');
+    }
 }

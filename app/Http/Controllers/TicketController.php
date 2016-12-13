@@ -88,7 +88,19 @@ class TicketController extends Controller
 
         $company = Company::find($companyId);
         $ticket = Ticket::find($ticketId);
+
         return response()->json(["company" => $company, "ticket" => $ticket],200);
+    }
+
+    public function getDeleteTicket(Request $request)
+    {
+        $ticketId = $request['ticketId'];
+
+        $ticket = Ticket::find($ticketId);
+
+        $ticket->delete();
+
+        return response('',200);
     }
 
 

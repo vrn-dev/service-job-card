@@ -4,22 +4,22 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Ticket extends Model
+class Sjc extends Model
 {
     public function company()
     {
         return $this->belongsTo('App\Company');
     }
-    public function user()
-    {
-        return $this->belongsTo('App\User');
-    }
     public function inventory()
     {
         return $this->belongsTo('App\Inventory');
     }
-    public function sjcs()
+    public function ticket()
     {
-        return $this->hasOne('App\Sjc');
+        return $this->belongsTo('App\Ticket');
+    }
+    public function user()
+    {
+        return $this->belongsTo('App\User');
     }
 }
