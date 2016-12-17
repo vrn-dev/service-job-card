@@ -15,7 +15,7 @@ class CompanyController extends Controller
 
     public function getDashboard ()
     {
-        return view('dashboard');
+        return view('sjc.sjc');
     }
 
     public function getCompanyView(Request $request)

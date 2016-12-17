@@ -108,6 +108,27 @@
         </div><!-- /.modal-dialog -->
     </div><!-- /.Confirmation modal -->
 
+    <div class="modal fade" tabindex="-1" role="dialog" id="sjc-completed-peek-modal"> <!-- SJC Completed Peek Modal-->
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="sjc-completed-modal-title"></h4>
+                </div>
+                <div class="modal-body">
+                    <div>
+                        <span class="btn btn-lg btn-primary center-block" id="downloadJcBtn">Download Job Card</span>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /SJC Completed Peek Modal-->
+
+    <a href="{{ route('pdf.download') }}">PDF Download</a>
+
 @endsection
 
 @section('scripts')
@@ -118,6 +139,8 @@
             const url_popTable = "{{ route('sjc.popTable') }}";
             const url_updateSjc = "{{ route('sjc.update') }}";
             const url_deleteSjc = "{{ route('sjc.delete') }}";
+            const url_fillSjc = "{{ route('sjc.fill') }}";
+
 
 
 
@@ -147,9 +170,9 @@
                         {
                             return '<span style="color: red">Active</span>'
                         }
-                        else if (data == "Not Active")
+                        else if (data == "Completed")
                         {
-                            return '<span style="color: green">Not Active</span>'
+                            return '<span style="color: green">Completed</span>'
                         }
                         else
                         {
@@ -161,13 +184,24 @@
 
             //SJC Row info on Click
             $('#sjcTable').off('click').on('click', 'tr', function () {
+
                 let rowData = table.row(this).data();
-                //console.log(rowData)
                 let coId = rowData.company_id;
                 let coName = rowData.company_name;
                 let ticketId = rowData.ticket_id;
-                $('#sjc-modal-title').html('Ticket #: '+ ticketId + ' for ' +coName);
-                $('#sjc-peek-modal').modal();
+                let status = rowData.status;
+                console.log(status)
+
+                if (status != "Completed")
+                {
+                    $('#sjc-modal-title').html('Ticket #: '+ ticketId + ' for ' +coName);
+                    $('#sjc-peek-modal').modal();
+                }else if (status == "Completed")
+                {
+                    $('#sjc-completed-modal-title').html('Completef Ticket #: '+ ticketId + ' for ' +coName)
+                    $('#sjc-completed-peek-modal').modal();
+                }
+
 
                 //Update SJC
                 $('#updateSjcBtn').off('click').on('click', function () {
@@ -220,11 +254,19 @@
                         });//ajax
                     });//#confirm delete
                 });//Delete Ticket
-                //TODO Make logic for Fill Job Card
+
+
+                //Fill Job Card
+                $('#fillJcBtn').off('click').on('click', function () {
+                    let fillTickedId = '?ticketId='+ ticketId;
+                    location = url_fillSjc + fillTickedId;
+                });
             });//SJC Row info on Click
 
 
 
         }); // document.ready
+
     </script>
 @endsection
+

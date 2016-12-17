@@ -22,4 +22,28 @@ class Sjc extends Model
     {
         return $this->belongsTo('App\User');
     }
+    public function fnw()
+    {
+        return $this->hasMany('App\Fnw');
+    }
+    public function otherFault()
+    {
+        return $this->hasOne('App\OtherFault');
+    }
+    public function actTaken()
+    {
+        return $this->hasMany('App\ActTaken');
+    }
+    public function otherAction()
+    {
+        return $this->hasOne('App\OtherAction');
+    }
+    public function repPart()
+    {
+        return $this->hasMany('App\RepPart');
+    }
+    public function noc()
+    {
+        return $this->hasOne('App\Noc');
+    }
 }

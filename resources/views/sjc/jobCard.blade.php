@@ -7,8 +7,8 @@
 
 @section('content')
     @include('includes.message-block')
-    <h3>Job Card</h3>
-    <form action="#" method="POST">
+    <h3>Job Card for Ticket# {{ $ticketId }}</h3>
+    <form action="{{ route('sjc.email') }}" method="POST">
         <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true"> <!-- Accordion -->
         <div class="panel panel-default">   <!-- Faults & Warnings Panel-->
             <div class="panel-heading" role="tab" id="headingOne">
@@ -285,34 +285,34 @@
                 <div class="panel-body">
                     <div class="col-md-4"> <!-- Footer Panel Col 1 -->
                         <h5>Action Taken:</h5>
-                        <div class="checkbox">
+                        <div class="radio">
                             <label>
-                                <input type="checkbox" name="noc[]" value="Demo"> DEMO
+                                <input type="radio" name="noc" value="Demo"> DEMO
                             </label>
                         </div>
-                        <div class="checkbox">
+                        <div class="radio">
                             <label>
-                                <input type="checkbox" name="noc[]" value="Installation"> INSTALLATION
+                                <input type="radio" name="noc" value="Installation"> INSTALLATION
                             </label>
                         </div>
-                        <div class="checkbox">
+                        <div class="radio">
                             <label>
-                                <input type="checkbox" name="noc[]" value="Service Charge"> SERVICE CHARGE
+                                <input type="radio" name="noc" value="Service Charge"> SERVICE CHARGE
                             </label>
                         </div>
-                        <div class="checkbox">
+                        <div class="radio">
                             <label>
-                                <input type="checkbox" name="noc[]" value="Warranty Check-up"> WARRANTY CHECK-UP
+                                <input type="radio" name="noc" value="Warranty Check-up"> WARRANTY CHECK-UP
                             </label>
                         </div>
-                        <div class="checkbox">
+                        <div class="radio">
                             <label>
-                                <input type="checkbox" name="noc[]" value="Under AMC"> UNDER AMC
+                                <input type="radio" name="noc" value="Under AMC"> UNDER AMC
                             </label>
                         </div>
-                        <div class="checkbox">
+                        <div class="radio">
                             <label>
-                                <input type="checkbox" name="noc[]" value="FOC"> F.O.C
+                                <input type="radio" name="noc" value="FOC"> F.O.C
                             </label>
                         </div>
                     </div> <!-- Footer Panel Col 1 -->
@@ -329,6 +329,8 @@
     </div>
 
             <div class="text-center">
+                <input type="hidden" name="_token" value="{{ Session::token() }}">
+                <input type="hidden" name="ticketId" value="{{ $ticketId }}">
                 <input type="submit" class="btn btn-success" value="Submit">
             </div>
 
@@ -336,4 +338,56 @@
 @endsection
 
 @section('scripts')
+    <script>
+
+        /*const url_emailSjc = "route('sjc.email)"; took out blade template {} to get rid of error on VCS
+        $(document).ready(function () {
+
+            // Collect form data
+            $(':submit').on('click', function (event) {
+                event.preventDefault();
+
+                // collect fnw otherFault
+                let fnwVal = [];
+                let otherFault = $('#otherFault').val();
+
+                $.each($("input[name='fnw']:checked"), function() {
+                    fnwVal.push($(this).val());
+                });// collect fnw otherFault
+                console.log('fnw value: '+fnwVal)
+                console.log('other Fault: '+otherFault)
+
+                //collect actTaken otherAction
+                let actTaken = [];
+                let otherAction = $('#otherAction').val();
+
+                $.each($("input[name='actTaken']:checked"), function() {
+                    actTaken.push($(this).val());
+                });// collect actTaken otherAction
+                console.log('actTaken value: '+actTaken)
+                console.log('otherAction value '+otherAction)
+
+                //collect repPart
+                let repPart = [];
+
+                $.each($("input[name='repPart']:checked"), function() {
+                    repPart.push($(this).val());
+                });// collect repPart
+                console.log('repPart value: '+repPart)
+
+                //collect noc remarks
+                let nocVal = [];
+                let remarks = $('#remarks').val();
+
+                $.each($("input[name='noc']:checked"), function() {
+                    nocVal.push($(this).val());
+                });// collect noc remarks
+                console.log('noc val: '+nocVal)
+                console.log('remarks: '+remarks)
+
+            });// Collect form data
+
+        }); //Document ready*/
+
+    </script>
 @endsection

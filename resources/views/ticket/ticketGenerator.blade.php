@@ -190,7 +190,7 @@
         // var url_popPostPeekModal = " route('ticket.postPeekModal') }}";
         var url_popGetPeekModal = "{{ route('ticket.getPeekModal') }}";
         var url_deleteTicket = "{{ route('ticket.getDeleteTicket') }}";
-        var url_sjcCreateForm = "{{ route('sjc.createForm') }}"; //TODO: Change route to jobCard
+        var url_sjcCreateForm = "{{ route('sjc.createForm') }}";
 
 
         $( "#ticketTable" ).tooltip({
@@ -414,7 +414,7 @@
                 });
                 // Create Job Card sjc_form
                 $('#peek-modal').modal();
-                $('#createJobCardBtn').on('click', function () {
+                $('#createJobCardBtn').off('click').on('click', function () {
                     let tickedId = '?ticketId='+ peekTicketId;
                     location = url_sjcCreateForm + tickedId;
                 });

@@ -2,10 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\ActTaken;
+use App\Fnw;
+use App\Noc;
+use App\OtherAction;
+use App\OtherFault;
+use App\RepPart;
 use App\Sjc;
 use App\Ticket;
+use PDF;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use phpDocumentor\Reflection\Types\Object_;
 
 
@@ -113,5 +121,115 @@ class SjcController extends Controller
         }
 
     }
+
+    public function getFillSjc (Request $request)
+    {
+        $ticketId = $request['ticketId'];
+
+        return view('sjc.jobCard')->with('ticketId', $ticketId);
+    }
+
+    public function postSendEmail (Request $request)
+    {
+        $this->validate($request, [
+            'fnw' => 'present',
+            'actTaken' => 'present',
+            'repPart' => 'present',
+            'noc' => 'present',
+        ]);
+
+        $ticketId = $request->ticketId;
+        $sjc = Sjc::where('ticket_id', $ticketId)->first();
+
+
+        $fnw = $request->fnw;
+        foreach ($fnw as $item) //Store Fault & Warnings in Fnw
+        {
+            $jc = new Fnw();
+            $jc->sjc_id = $sjc->id;
+            $jc->ticket_id = $ticketId;
+            $jc->fnw_value = $item;
+            $jc->save();
+        }
+
+        $of = new OtherFault(); //Store otherFault in other_fault
+        $of->sjc_id = $sjc->id;
+        $of->ticket_id = $ticketId;
+        $of->value = $request->otherFault;
+        $of->save();
+
+
+        $actTaken = $request->actTaken;
+        foreach ($actTaken as $item) //Store actTaken in act_taken
+        {
+            $jc = new ActTaken();
+            $jc->sjc_id = $sjc->id;
+            $jc->ticket_id = $ticketId;
+            $jc->value = $item;
+            $jc->save();
+        }
+
+        $oa = new OtherAction(); //Store otherAction in other_action
+        $oa->sjc_id = $sjc->id;
+        $oa->ticket_id = $ticketId;
+        $oa->value = $request->otherAction;
+        $oa->save();
+
+        $repPart = $request->repPart;
+        foreach ($repPart as $item) //Store repPart in rep_part
+        {
+            $jc = new RepPart();
+            $jc->sjc_id = $sjc->id;
+            $jc->ticket_id = $ticketId;
+            $jc->value = $item;
+            $jc->save();
+        }
+
+        $noc = $request->noc;//Store noc in noc
+        $nc = new Noc();
+        $nc->sjc_id = $sjc->id;
+        $nc->ticket_id = $ticketId;
+        $nc->value = $noc;
+        $nc->remarks = $request->remarks;
+        $nc->save();
+
+        $sjc->status = "Completed";
+        $sjc->update();
+
+        //TODO sort out mail
+        //TODO sort out JC download and template
+        //TODO same JC needs to go out in mail as attachment
+
+        /*$data = [
+            'fnw' => $request->fnw,
+            'otherFault' => $request->otherFault,
+            'actTaken' => $request->actTaken,
+            'otherAction' => $request->otherAction,
+            'repPart' => $request->repPart,
+            'noc' => $request->noc,
+            'remarks' => $request->remarks,
+            'ticketId' => $request->ticketId
+        ];
+
+        if(Mail::send('emails.jobCardMail', $data, function ($message){
+            $message->from('vrn.njt@outlook.com');
+            $message->to('vrn.dev@outlook.com');
+            $message->subject('New Job Card');
+        }))*/
+
+
+        return view('sjc.sjc');
+    }
+
+    public function getPdfDownload()
+    {
+        $pdf = PDF::loadView('emails.test');
+
+        return $pdf->download('invoice.pdf');
+    }
+
+
 }
 //TODO Make Validations for submits
+//TODO make Job Card into PDF and send as attachment
+//TODO once the JC is done and status on SJC is set to Completed, move ticket from active ticket table to historical ticket table, make historical ticket table

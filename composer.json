@@ -8,7 +8,9 @@
         "php": ">=5.6.4",
         "laravel/framework": "5.3.*",
         "filp/whoops": "^2.1",
-        "laracasts/utilities": "^2.1"
+        "laracasts/utilities": "^2.1",
+        "doctrine/dbal": "^2.5",
+        "barryvdh/laravel-dompdf": "^0.7.0"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

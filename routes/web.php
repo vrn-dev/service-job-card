@@ -193,6 +193,25 @@ Route::group(['middleware' => ['web']], function ()
         'middleware' => 'auth'
     ]);
 
+    Route::get('/sjc/fill/{ticketId?}', [
+        'uses' => 'SjcController@getFillSjc',
+        'as' => 'sjc.fill',
+        'middleware' => 'auth'
+    ]);
+
+    //Send filled Job Card to Customer, Accounts, Manager
+    Route::post('/sjc/fill/send_email', [
+        'uses' => 'SjcController@postSendEmail',
+        'as' => 'sjc.email',
+        'middleware' => 'auth'
+    ]);
+
+    //pdf
+    Route::get('/sjc/pdf_download', [
+        'uses' => 'SjcController@getPdfDownload',
+        'as' => 'pdf.download',
+        'middleware' => 'auth'
+    ]);
 
 });
 
