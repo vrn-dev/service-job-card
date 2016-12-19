@@ -109,7 +109,7 @@
                                                                            -webkit-box-sizing: border-box;
                                                                            -moz-box-sizing: border-box;
                                                                            box-sizing: border-box;" rows="10"
-                                                                           placeholder="Other Faults..."></textarea>
+                                                                           placeholder="Other Faults...">{{ Request::old('otherFault') }}</textarea>
                     </div>
                 </div>
             </div>
@@ -268,7 +268,7 @@
                                                                            -webkit-box-sizing: border-box;
                                                                            -moz-box-sizing: border-box;
                                                                            box-sizing: border-box;" rows="20"
-                                  placeholder="Others..."></textarea>
+                                  placeholder="Others...">{{ Request::old('otherAction') }}</textarea>
                     </div> <!-- Actions Panel Col 3-->
                 </div>
             </div>
@@ -321,13 +321,26 @@
                                                                            -webkit-box-sizing: border-box;
                                                                            -moz-box-sizing: border-box;
                                                                            box-sizing: border-box;" rows="10"
-                                  placeholder="Remarks..."></textarea>
+                                  placeholder="Remarks...">{{ Request::old('remarks') }}</textarea>
                     </div> <!-- Footer Panel Col 2 -->
                 </div>
             </div>
         </div> <!-- Footer Panel -->
     </div>
-
+            <div class="col-md-12">
+                <div class="col-md-6">
+                    <label for="fae">Field Service Engineer Name:</label>
+                    <input type="text" name="fae" class="form-control" value="{{ Request::old('fae') }}">
+                    <label for="customerSupervisor">Customer Supervisor:</label>
+                    <input type="text" class="form-control" name="customerSupervisor" value="{{ Request::old('customerSupervisor') }}">
+                </div>
+                <div class="col-md-6">
+                    <label for="jobDate">Job Date:</label>
+                    <input type="date" name="jobDate" class="form-control" value="{{ Request::old('jobDate') }}">
+                    <label for="machineHours">Machine Hours:</label>
+                    <input type="text" class="form-control" name="machineHours" value="{{ Request::old('machineHours') }}">
+                </div>
+            </div>
             <div class="text-center">
                 <input type="hidden" name="_token" value="{{ Session::token() }}">
                 <input type="hidden" name="ticketId" value="{{ $ticketId }}">

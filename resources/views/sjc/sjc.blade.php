@@ -31,6 +31,8 @@
         </div> <!-- Table Row Div -->
     </div> <!-- Container: Fluid -->
 
+
+
     <div class="modal fade" tabindex="-1" role="dialog" id="sjc-peek-modal"> <!-- SJC Peek Modal-->
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -127,7 +129,8 @@
         </div><!-- /.modal-dialog -->
     </div><!-- /SJC Completed Peek Modal-->
 
-    <a href="{{ route('pdf.download') }}">PDF Download</a>
+    <a href="{{ route('test.link') }}">PDF Download</a>
+
 
 @endsection
 
@@ -140,7 +143,7 @@
             const url_updateSjc = "{{ route('sjc.update') }}";
             const url_deleteSjc = "{{ route('sjc.delete') }}";
             const url_fillSjc = "{{ route('sjc.fill') }}";
-
+            const url_downloadSjc = "{{ route('pdf.download') }}";
 
 
 
@@ -260,6 +263,13 @@
                 $('#fillJcBtn').off('click').on('click', function () {
                     let fillTickedId = '?ticketId='+ ticketId;
                     location = url_fillSjc + fillTickedId;
+                });
+
+                //Download SJC
+                $('#downloadJcBtn').off('click').on('click', function () {
+                    let dlTicketId = '?ticketId='+ ticketId;
+                    location = url_downloadSjc + dlTicketId;
+                    $('#sjc-completed-peek-modal').modal('hide');
                 });
             });//SJC Row info on Click
 

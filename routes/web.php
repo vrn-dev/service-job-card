@@ -207,9 +207,16 @@ Route::group(['middleware' => ['web']], function ()
     ]);
 
     //pdf
-    Route::get('/sjc/pdf_download', [
+    Route::get('/sjc/pdf_download/{ticketId?}', [
         'uses' => 'SjcController@getPdfDownload',
         'as' => 'pdf.download',
+        'middleware' => 'auth'
+    ]);
+
+    //test link
+    Route::get('/sjc/test_link', [
+        'uses' => 'SjcController@testLink',
+        'as' => 'test.link',
         'middleware' => 'auth'
     ]);
 
