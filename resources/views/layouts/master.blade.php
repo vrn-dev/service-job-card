@@ -21,7 +21,6 @@
 </div>
 
 <script src="{{ URL::to('src/js/jquery.min.js') }}"></script>
-<script src="{{ URL::to('src/js/jquery-ui.min.js') }}"></script>
 <script src="{{ URL::to('src/js/bootstrap.min.js') }}"></script>
 <script src="{{ URL::to('/src/js/datatables.min.js') }}"></script>
 <script src="{{ URL::to('/src/js/chosen.jquery.min.js') }}"></script>
