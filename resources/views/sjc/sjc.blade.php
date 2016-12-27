@@ -16,17 +16,19 @@
         <div class="row"> <!-- Table Row Div -->
             <h3>Ticket History</h3>
             <div class="row" style="padding-left: 15px">
-                <table id="sjcTable" class="display" width="100%" title="Click a row to see SJC Details" data-toggle="tooltip" data-placement="top">
-                    <thead>
-                    <tr>
-                        <th>Ticket #</th>
-                        <th>Company</th>
-                        <th>Assigned To</th>
-                        <th>Scheduled Date</th>
-                        <th>Status</th>
-                    </tr>
-                    </thead>
-                </table>
+                <div class="table-responsive">
+                    <table id="sjcTable" class="display" width="100%" title="Click a row to see SJC Details" data-toggle="tooltip" data-placement="top">
+                        <thead>
+                        <tr>
+                            <th>Ticket #</th>
+                            <th>Company</th>
+                            <th>Assigned To</th>
+                            <th>Scheduled Date</th>
+                            <th>Status</th>
+                        </tr>
+                        </thead>
+                    </table>
+                </div>
             </div>
         </div> <!-- Table Row Div -->
     </div> <!-- Container: Fluid -->
@@ -44,16 +46,17 @@
                     <div>
                         <span class="btn btn-lg btn-primary center-block" id="fillJcBtn">Fill Job Card</span>
                     </div>
-                    <div style="padding: 10px 0px 10px 0px">
+                    @if(Auth::user()->username == 'admin')
+                    <div style="padding-top: 10px">
                         <span class="btn btn-lg btn-info center-block" id="updateSjcBtn">Reschedule Job Card</span>
                     </div>
-                    <div>
+                    <div style="padding-top: 10px">
                         <span class="btn btn-lg btn-danger center-block" id="deleteSjcBtn">Delete Job Card</span>
                     </div>
+                    @endif
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save changes</button>
                 </div>
             </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
@@ -79,9 +82,9 @@
                             <label class="col-sm-3 control-label">Assigned to User</label>
                             <div class="col-sm-9" style="padding-top: 10px">
                                 <select name="rescheduleAssignedTo" id="rescheduleAssignedTo">
-                                    <option value="User1">User 1</option>
-                                    <option value="User2">User 2</option>
-                                    <option value="User3">User 3</option>
+                                    @foreach($username as $item)
+                                        <option value="{{ $item }}">{{ $item }}</option>
+                                    @endforeach
                                 </select>
                             </div>
                         </div>
@@ -129,8 +132,6 @@
         </div><!-- /.modal-dialog -->
     </div><!-- /SJC Completed Peek Modal-->
 
-    <a href="{{ route('test.link') }}">PDF Download</a>
-
 
 @endsection
 
@@ -152,7 +153,7 @@
 
             //pop dataTables
             table = $('#sjcTable').DataTable( {
-                pageLength: 5,
+                pageLength: 10,
                 lengthMenu: [5, 10, 25, 50],
                 order: [3, 'asc'],
                 ajax: {
@@ -193,7 +194,6 @@
                 let coName = rowData.company_name;
                 let ticketId = rowData.ticket_id;
                 let status = rowData.status;
-                console.log(status)
 
                 if (status != "Completed")
                 {
@@ -201,7 +201,7 @@
                     $('#sjc-peek-modal').modal();
                 }else if (status == "Completed")
                 {
-                    $('#sjc-completed-modal-title').html('Completef Ticket #: '+ ticketId + ' for ' +coName)
+                    $('#sjc-completed-modal-title').html('Completed Ticket #: '+ ticketId + ' for ' +coName)
                     $('#sjc-completed-peek-modal').modal();
                 }
 
@@ -215,9 +215,6 @@
                 $('#subSjcUpdateModalBtn').off('click').on('click', function () {
                     let reDate = $('#rescheduleDate').val();
                     let reAssign = $('#rescheduleAssignedTo').val();
-                    console.log(ticketId);
-                    console.log(reDate);
-                    console.log(reAssign);
                     $.ajax({
                         method: "POST",
                         url: url_updateSjc,
@@ -230,6 +227,11 @@
                         success: function () {
                             $('#sjcTable').DataTable().ajax.reload();
                             alert('Job Card for Ticket # ' + ticketId + ' Successfully Updated')
+                            $('#update-sjc-modal').modal('hide');
+                            $('#sjc-peek-modal').modal('hide');
+                        },
+                        error: function () {
+                            alert('An error occured while updating. Please try again or contact SuperAdmin')
                         }
                     }); //ajax
                 });//Sub Modal Update Ajax
@@ -241,7 +243,6 @@
                     $('#delete-confirm-modal').modal();
                     $('#delete-confirm-title').html("Are you Sure you want to Delete Job Card for Ticket # "+ deleteTicketId);
                     $('#confirmDelete').off('click').on('click', function () {
-                        console.log('clicked ' + deleteTicketId)
                         $.ajax({
                             method: "GET",
                             url: url_deleteSjc,
@@ -272,11 +273,7 @@
                     $('#sjc-completed-peek-modal').modal('hide');
                 });
             });//SJC Row info on Click
-
-
-
         }); // document.ready
-
     </script>
 @endsection
 

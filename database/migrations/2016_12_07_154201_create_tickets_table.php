@@ -19,7 +19,7 @@ class CreateTicketsTable extends Migration
             $table->string('company_name');
             $table->string('inventory_id');
             $table->string('asset_serial');
-            $table->string('aasset_model');
+            $table->string('asset_model');
             $table->date('issue_date');
             $table->string('issue_category');
             $table->string('issue_details');

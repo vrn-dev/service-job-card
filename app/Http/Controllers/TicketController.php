@@ -16,14 +16,14 @@ class TicketController extends Controller
         return view('ticket.ticketGenerator', ['companySelect' => $companySelect]);
     }
 
-    public function getCompanyDetails()
+    /*public function getCompanyDetails()
     {
         $company = Company::all();
 
         return response()->json($company);
-    }
+    }*/
 
-    public function sendJson(Request $request)
+    public function popAsset(Request $request)
     {
         $idVal = $request['idVal'];
 
@@ -36,7 +36,7 @@ class TicketController extends Controller
         return response()->json($inventory);
     }
 
-    public function ticketIdGen()
+    public function popTicketId()
     {
         $ticketId = Ticket::orderBy('id','desc')->first();
         $newTicketId = $ticketId->id + 1;

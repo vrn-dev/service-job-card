@@ -8,7 +8,10 @@ use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
-    public function userSignup(Request $request)
+    public function getLogin(){
+
+    }
+    public function userSignUp(Request $request)
     {
         $this->validate($request, [
             'username' => 'required|unique:users',
@@ -44,7 +47,7 @@ class UserController extends Controller
         {
             return redirect()->route('dashboard');
         }
-        return redirect()->route('login');
+        return redirect()->route('login')->withMessage('Invalid Login')->withInput();
     }
 
     public function logout()

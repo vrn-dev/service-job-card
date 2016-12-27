@@ -7,7 +7,7 @@
 
 @section('content')
     @include('includes.message-block')
-    <h1>Service Job Card Creator</h1>
+    <h3>Service Job Card Creator</h3>
     <div class="panel panel-default">
         <div class="panel-heading">
             <h4 class="panel-title">Details</h4>
@@ -91,9 +91,10 @@
                     <label for="assignedTo" class="col-sm-3 control-label">Assigned User</label>
                     <div class="col-md-9" style="padding-top: 10px">
                         <select name="assignedTo" id="assignedTo">
-                            <option value="User1">User 1</option>
-                            <option value="User2">User 2</option>
-                            <option value="User3">User 3</option>
+                            @foreach($username as $item)
+                                <option value="{{ $item }}">{{ $item }}</option>
+                            @endforeach
+
                         </select>
                     </div>
                 </div>
@@ -104,21 +105,12 @@
             </div>
         </div>
     </div>
-
-
-
-
-
-
-
 @endsection
 
 @section('scripts')
     <script>
 
         $('#assignedTo').chosen({ width: "100%" });
-//        $.datepicker.formatDate("yy-mm-dd");
-//        $('#scheduleDate').datepicker();
 
         $(document).ready(function () {
             //URL vars
@@ -131,9 +123,6 @@
             //create new SJC
             $('#createSjCBtn').on('click', function () {
                 let scheduleDate = $('input[name=scheduleDate]').val();
-                /*console.log("Schedule Date: "+scheduleDate);
-                console.log("Ticket ID "+ticketId);
-                console.log("Assigned To "+assignedTo);*/
                 $.ajax({
                     method: "POST",
                     url: url_createSjc,
@@ -147,7 +136,7 @@
                         alert('Job Card Successfully Created');
                         location = url_sjcIndex;
                     },
-                    error: function (jqXHR, textStatus, errorThrown) { //TODO: Do better error capture and validation
+                    error: function (jqXHR, textStatus, errorThrown) {
                         alert('There was an error creating the record');
                         console.log(jqXHR);
                         console.log('textStatus = '+textStatus);

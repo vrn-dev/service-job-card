@@ -18,6 +18,7 @@ Route::group(['middleware' => ['web']], function ()
         return view('login');
     }]);
 
+
     Route::get('/login', [ 'as'=> 'login', function () {
         return view('login');
     }]);
@@ -32,14 +33,8 @@ Route::group(['middleware' => ['web']], function ()
     ]);
 
     Route::post('/signUpSubmit', [
-       'uses' => 'UserController@userSignup',
+       'uses' => 'UserController@userSignUp',
         'as' => 'signUpSubmit'
-    ]);
-
-    Route::get('/dashboard', [
-        'uses' => 'CompanyController@getDashboard',
-        'as' => 'dashboard',
-        'middleware' => 'auth'
     ]);
 
     Route::get('/logout', [
@@ -47,178 +42,237 @@ Route::group(['middleware' => ['web']], function ()
         'as' => 'logout'
     ]);
 
-    //Company Controllers
+    Route::group(['middleware' => 'auth'], function (){
 
-    Route::get('/company', [
-        'uses' => 'CompanyController@getCompanyView',
-        'as' => 'companyView',
-        'middleware' => 'auth'
-    ]);
+        Route::group(['middleware' => 'admin'], function (){
 
-    Route::post('/create_company/{current_page}', [
-        'uses' => 'CompanyController@postCreateCompany',
-        'as' => 'create.company',
-        'middleware' => 'auth'
-    ]);
+            Route::get('delete', [
+                'uses' => 'CompanyController@getDeleteCompany',
+                'as' => 'company.delete',
+                'prefix' => 'company'
+            ]);
 
-    Route::post('/edit_company', [
-        'uses' => 'CompanyController@postEditCompany',
-        'as' => 'edit.company',
-        'middleware' => 'auth'
-    ]);
+            Route::get('delete', [
+                'uses' => 'InventoryController@getInventoryDelete',
+                'as' => 'inventory.delete',
+                'prefix' => 'inventory'
+            ]);
 
-    Route::get('/delete_company/{company_id}/{current_page}', [
-        'uses' => 'CompanyController@getDeleteCompany',
-        'as' => 'delete.company',
-        'middleware' => 'auth'
-    ]);
+            Route::get('delete', [
+                'uses' => 'TicketController@getDeleteTicket',
+                'as' => 'ticket.delete',
+                'prefix' => 'ticket'
+            ]);
 
-    //Inventory Controllers
+            //Assign ticket to FAE
+            Route::get('create_form', [
+                'uses' => 'SjcController@getSjcCreateForm',
+                'as' => 'sjc.createForm',
+                'prefix' => 'sjc'
+            ]);
 
-    //Route::resource('/inventory', 'InventoryController');
-    Route::get('/inventory', [
-        'uses' => 'InventoryController@getIndex',
-        'as' => 'inventory.index',
-        'middleware' => 'auth'
-    ]);
+            //Submit assigned ticket as SJC and update sjc DB
+            Route::post('create', [
+                'uses' => 'SjcController@postCreateSjc',
+                'as' => 'sjc.createSjc',
+                'prefix' => 'sjc'
+            ]);
 
-    Route::post('inventory/create', [
-        'uses' => 'InventoryController@postCreateInventory',
-        'as' => 'inventory.store',
-        'middleware' => 'auth'
-    ]);
+            Route::post('update', [
+                'uses' => 'SjcController@postSjcUpdate',
+                'as' => 'sjc.update',
+                'prefix' => 'sjc'
+            ]);
 
-    Route::get('/inventory_delete/{inventory_id}', [
-        'uses' => 'InventoryController@getInventoryDelete',
-        'as' => 'inventory.delete',
-        'middleware' => 'auth'
-    ]);
+            Route::get('delete', [
+                'uses' => 'SjcController@getSjcDelete',
+                'as' => 'sjc.delete',
+                'prefix' => 'sjc'
+            ]);
 
-    //Ticket Routes
-    Route::get('/ticket', [
-        'uses' => 'TicketController@getIndex',
-        'as' => 'ticket.index',
-        'middleware' => 'auth'
-    ]);
+            Route::group(['prefix' => 'admin'], function (){
+                Route::get('index',[
+                    'uses' => 'AdminController@getIndex',
+                    'as' => 'admin.index'
+                ]);
 
-    Route::get('/ticket_autocomplete', [
-        'uses' => 'TicketController@getAutocomplete',
-        'as' => 'ticket.autocomplete',
-        'middleware' => 'auth'
-    ]);
+                Route::get('popUserTable',[
+                    'uses' => 'AdminController@popUserTable',
+                    'as' => 'admin.popUserTable'
+                ]);
 
-    Route::post('/ticket_json', [
-        'uses' => 'TicketController@sendJson',
-        'as' => 'ticket.sendJson',
-        'middleware' => 'auth'
-    ]);
+                Route::post('create',[
+                    'uses' => 'AdminController@postCreateUser',
+                    'as' => 'admin.create'
+                ]);
 
-    Route::get('/ticket_getTicketId', [
-        'uses' => 'TicketController@ticketIdGen',
-        'as' => 'ticket.getTicketId',
-        'middleware' => 'auth'
-    ]);
+                Route::post('password_reset',[
+                    'uses' => 'AdminController@postUserPasswordReset',
+                    'as' => 'admin.adminPasswordReset'
+                ]);
 
-    Route::get('/ticket_popTable', [
-        'uses' => 'TicketController@popTable',
-        'as' => 'ticket.popTable',
-        'middleware' => 'auth'
-    ]);
+                Route::post('delete',[
+                    'uses' => 'AdminController@postDeleteUser',
+                    'as' => 'admin.delete'
+                ]);
 
-    Route::post('/ticket_create', [
-        'uses' => 'TicketController@postCreateTicket',
-        'as' => 'ticket.create',
-        'middleware' => 'auth'
-    ]);
+                Route::post('reset_password',[
+                    'uses' => 'AdminController@postAdminResetPassword',
+                    'as' => 'admin.resetUserPassword'
+                ]);
+            });
 
-    /*Route::post('/ticket/peekmodal', [
-        'uses' => 'TicketController@postPeekModal',
-        'as' => 'ticket.postPeekModal',
-        'middleware' => 'auth'
-    ]);*/
+        });
 
-    Route::get('/ticket/peekmodal', [
-        'uses' => 'TicketController@getPeekModal',
-        'as' => 'ticket.getPeekModal',
-        'middleware' => 'auth'
-    ]);
+        Route::get('dashboard', [
+            'uses' => 'CompanyController@getDashboard',
+            'as' => 'dashboard',
+            'prefix' => 'sjc'
+        ]);
 
-    Route::get('/ticket/delete', [
-        'uses' => 'TicketController@getDeleteTicket',
-        'as' => 'ticket.getDeleteTicket',
-        'middleware' => 'auth'
-    ]);
+        //Company Controllers
 
-    //SJC Routes
+        Route::group(['prefix' => 'company'], function(){
+            Route::get('index', [
+                'uses' => 'CompanyController@getIndex',
+                'as' => 'company.index',
+            ]);
 
-    Route::get('/sjc/create_form/{ticketId?}', [
-        'uses' => 'SjcController@getSjcCreateForm',
-        'as' => 'sjc.createForm',
-        'middleware' => 'auth'
-    ]);
+            Route::post('create', [
+                'uses' => 'CompanyController@postCreateCompany',
+                'as' => 'company.create',
+            ]);
 
-    Route::get('/sjc', [
-        'uses' => 'SjcController@getSjcIndex',
-        'as' => 'sjc.index',
-        'middleware' => 'auth'
-    ]);
+            Route::post('edit', [
+                'uses' => 'CompanyController@postEditCompany',
+                'as' => 'company.edit',
+            ]);
 
-    Route::post('/sjc/create_sjc', [
-        'uses' => 'SjcController@postCreateSjc',
-        'as' => 'sjc.createSjc',
-        'middleware' => 'auth'
-    ]);
+            Route::get('popTable', [
+                'uses' => 'CompanyController@popTable',
+                'as' => 'company.popTable',
+            ]);
+        });
 
-    Route::get('/sjc/pop_table', [
-        'uses' => 'SjcController@popTable',
-        'as' => 'sjc.popTable',
-        'middleware' => 'auth'
-    ]);
 
-    Route::get('/sjc/job_card', [
-        'uses' => 'SjcController@getJobCardIndex',
-        'as' => 'sjc.jobCard.index',
-        'middleware' => 'auth'
-    ]);
+        //Inventory Controllers
 
-    Route::post('/sjc/update_sjc', [
-        'uses' => 'SjcController@postSjcUpdate',
-        'as' => 'sjc.update',
-        'middleware' => 'auth'
-    ]);
+        Route::group(['prefix' => 'inventory'], function (){
+            Route::get('index', [
+                'uses' => 'InventoryController@getIndex',
+                'as' => 'inventory.index',
+            ]);
 
-    Route::get('/sjc/delete', [
-        'uses' => 'SjcController@getSjcDelete',
-        'as' => 'sjc.delete',
-        'middleware' => 'auth'
-    ]);
+            Route::post('create', [
+                'uses' => 'InventoryController@postCreateInventory',
+                'as' => 'inventory.create',
+            ]);
 
-    Route::get('/sjc/fill/{ticketId?}', [
-        'uses' => 'SjcController@getFillSjc',
-        'as' => 'sjc.fill',
-        'middleware' => 'auth'
-    ]);
+            Route::get('popTable', [
+                'uses' => 'InventoryController@popTable',
+                'as' => 'inventory.popTable',
+            ]);
 
-    //Send filled Job Card to Customer, Accounts, Manager
-    Route::post('/sjc/fill/send_email', [
-        'uses' => 'SjcController@postSendEmail',
-        'as' => 'sjc.email',
-        'middleware' => 'auth'
-    ]);
+            Route::get('popCompanySelect',[
+                'uses' => 'InventoryController@popCompanySelect',
+                'as' => 'inventory.popCompanySelect'
+            ]);
+        });
 
-    //pdf
-    Route::get('/sjc/pdf_download/{ticketId?}', [
-        'uses' => 'SjcController@getPdfDownload',
-        'as' => 'pdf.download',
-        'middleware' => 'auth'
-    ]);
+        //Ticket Routes
 
-    //test link
-    Route::get('/sjc/test_link', [
-        'uses' => 'SjcController@testLink',
-        'as' => 'test.link',
-        'middleware' => 'auth'
-    ]);
+        Route::group(['prefix' => 'ticket'], function (){
+            Route::get('index', [
+                'uses' => 'TicketController@getIndex',
+                'as' => 'ticket.index',
+            ]);
 
+            Route::post('popAsset', [
+                'uses' => 'TicketController@popAsset',
+                'as' => 'ticket.popAsset',
+            ]);
+
+            Route::get('popTicketId', [
+                'uses' => 'TicketController@popTicketId',
+                'as' => 'ticket.popTicketId',
+            ]);
+
+            Route::get('popTable', [
+                'uses' => 'TicketController@popTable',
+                'as' => 'ticket.popTable',
+            ]);
+
+            Route::post('create', [
+                'uses' => 'TicketController@postCreateTicket',
+                'as' => 'ticket.create',
+            ]);
+
+            Route::get('popPeekModal', [
+                'uses' => 'TicketController@getPeekModal',
+                'as' => 'ticket.popPeekModal',
+            ]);
+        });
+
+        //SJC Routes
+        Route::group(['prefix' => 'sjc'], function (){
+            Route::get('index', [
+                'uses' => 'SjcController@getSjcIndex',
+                'as' => 'sjc.index'
+            ]);
+
+            Route::get('pop_table', [
+                'uses' => 'SjcController@popTable',
+                'as' => 'sjc.popTable',
+            ]);
+
+            Route::get('job_card', [
+                'uses' => 'SjcController@getJobCardIndex',
+                'as' => 'sjc.jobCard.index',
+            ]);
+
+            Route::get('fill', [
+                'uses' => 'SjcController@getFillSjc',
+                'as' => 'sjc.fill',
+            ]);
+
+            //Send filled Job Card to Customer, Accounts, Manager
+            Route::post('fill/send_email', [
+                'uses' => 'SjcController@postSendEmail',
+                'as' => 'sjc.email',
+            ]);
+
+            //pdf
+            Route::get('pdf_download', [
+                'uses' => 'SjcController@getPdfDownload',
+                'as' => 'pdf.download',
+            ]);
+        });
+
+        //User Account
+        Route::get('user_account', [
+            'uses' => 'AdminController@getUserAccountIndex',
+            'as' => 'admin.userIndex',
+            'prefix' => 'admin'
+        ]);
+
+        Route::post('user_changePassword', [
+            'uses' => 'AdminController@postUserChangePassword',
+            'as' => 'admin.userChangePassword',
+            'prefix' => 'admin'
+        ]);
+
+        Route::post('user_changeEmail', [
+            'uses' => 'AdminController@postUserChangeEmail',
+            'as' => 'admin.userChangeEmail',
+            'prefix' => 'admin'
+        ]);
+
+
+        //test link
+        Route::get('/sjc/test_link', [
+            'uses' => 'SjcController@testLink',
+            'as' => 'test.link',
+        ]);
+    });
 });
 

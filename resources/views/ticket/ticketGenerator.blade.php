@@ -3,18 +3,11 @@
 @section('title')
     Ticket Generator
 @endsection
-@section('styles')
-    <style>
-        td.highlight {
-            font-weight: bold;
-            color: blue;
-        }
-    </style>
-@endsection
+
 
 @section('content')
     @include('includes.message-block')
-    <h1>Ticket Generator</h1>
+    <h3>Ticket Generator</h3>
     <div class="container-fluid">
         <div class="row" style="padding-top: 50px">
             <div class="row" style="padding-bottom: 20px; padding-left: 20px">
@@ -23,11 +16,11 @@
                 </button>
 
                 <div class="collapse" id="createTicket">
-                    <row>
+                    <div class="row">
                         <fieldset class="form-group">
                             <form action="" class="form-group" method="POST" id="createTicketForm">
                                 <legend>Generate Ticket</legend>
-                                <row>
+                                <div class="row">
                                     <div class="col-md-6"> <!-- Generate Ticket Well Column 1-->
                                         <label for="ticketNumber">Ticket #</label>
                                         <input type="text" name="ticketNumber" class="form-control" id="ticketNumberField" readonly>
@@ -58,44 +51,41 @@
                                         <label for="issueDescription">Issue Description</label><br>
                                         <textarea name="issueDescription" id="issueDescription" style="width: 100%"
                                                   rows="5"></textarea>
-
-                                        <!-- TODO: Add AssignToUser and schedule Date-->
-
-
                                     </div> <!-- Generate Ticket Well Column 2-->
-                                </row>
+                                </div>
                             </form>
                         </fieldset>
-                            <row>
+                            <div class="row">
                                 <button type="submit" id="createTicketSubmitBtn" class="btn btn-info center-block">Submit</button>
-                            </row>
-                    </row>
-
+                            </div>
+                    </div>
                 </div>
 
             </div> <!-- Row 2 Div -->
         </div> <!-- Row 1 Div -->
         <div class="row"> <!-- Table Row Div -->
-            <h3>Ticket History</h3>
+            <h4>Ticket History</h4>
             <div class="row" style="padding-left: 15px">
-                <table id="ticketTable" class="display" width="100%" title="Click a row to see Ticket Details" data-toggle="tooltip" data-placement="top">
-                    <thead>
-                    <tr>
-                        <th>Ticket #</th>
-                        <th>Company</th>
-                        <th>Date</th>
-                        <th>Category</th>
-                        <th>Status</th>
-                    </tr>
-                    </thead>
-                </table>
+                <div class="table-responsive">
+                    <table id="ticketTable" class="display" width="100%" title="Click a row to see Ticket Details" data-toggle="tooltip" data-placement="top">
+                        <thead>
+                        <tr>
+                            <th>Ticket #</th>
+                            <th>Company</th>
+                            <th>Date</th>
+                            <th>Category</th>
+                            <th>Status</th>
+                        </tr>
+                        </thead>
+                    </table>
+                </div>
             </div>
         </div> <!-- Table Row Div -->
     </div> <!-- Container: Fluid -->
 
 
     <!-- Ticket Peek Modal -->
-    <div class="modal fade" tabindex="-1" role="dialog" id="peek-modal"> <!-- TODO : Add assignedTo and scheduled date into modal-->
+    <div class="modal fade" tabindex="-1" role="dialog" id="peek-modal">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -150,8 +140,10 @@
                     </form>
                 </div>
                 <div class="modal-footer">
+                    @if(Auth::user()->username == 'admin')
                     <a href="#" class="btn btn-warning" id="createJobCardBtn">Create a Job Card</a>
                     <a href="#" class="btn btn-danger" id="deleteTicketBtn">Delete this Ticket</a>
+                    @endif
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                 </div>
             </div><!-- /.modal-content -->
@@ -181,16 +173,14 @@
     <script>
 
         //json vars
-        var table;
-        var url_popAsset = "{{ route('ticket.sendJson') }}";
-        var session = '{{ Session::token() }}';
-        var url_popTicketId = "{{ route('ticket.getTicketId') }}";
-        var url_popTable = "{{ route('ticket.popTable') }}";
-        var url_createTicket = "{{ route('ticket.create') }}";
-        // var url_popPostPeekModal = " route('ticket.postPeekModal') }}";
-        var url_popGetPeekModal = "{{ route('ticket.getPeekModal') }}";
-        var url_deleteTicket = "{{ route('ticket.getDeleteTicket') }}";
-        var url_sjcCreateForm = "{{ route('sjc.createForm') }}";
+        let url_popAsset = "{{ route('ticket.popAsset') }}";
+        let session = '{{ Session::token() }}';
+        let url_popTicketId = "{{ route('ticket.popTicketId') }}";
+        let url_popTable = "{{ route('ticket.popTable') }}";
+        let url_createTicket = "{{ route('ticket.create') }}";
+        let url_popGetPeekModal = "{{ route('ticket.popPeekModal') }}";
+        let url_deleteTicket = "{{ route('ticket.delete') }}";
+        let url_sjcCreateForm = "{{ route('sjc.createForm') }}";
 
 
         $( "#ticketTable" ).tooltip({
@@ -222,21 +212,15 @@
             });
 
             //submit Create Ticket
-            $('#createTicketSubmitBtn').on('click', function (e) {
+            $('#createTicketSubmitBtn').off('click').on('click', function (e) {
                 e.preventDefault();
-                var companyId= $('#selectCo').find('option:selected').val();
-                //var companyName= $('#selectCo option:selected').text();
-                var assetId = $('input[name=assetCoRadio]:checked').val();
-                var issueDate = $('input[name=issueDate]').val();
-                var issueCatagory = $('#issueCategorySelect').find('option:selected').val();
-                var issueDescription = $('#issueDescription').val();
+                let companyId= $('#selectCo').find('option:selected').val();
+                let assetId = $('input[name=assetCoRadio]:checked').val();
+                let issueDate = $('input[name=issueDate]').val();
+                let issueCatagory = $('#issueCategorySelect').find('option:selected').val();
+                let issueDescription = $('#issueDescription').val();
 
-                /*console.log("Submit Co Id: "+companyId);
-                //console.log("Submit Co Name: "+companyName);
-                console.log("Submit Co Asset Id: "+assetId);
-                console.log("Submit Co Issue Date: "+issueDate);
-                console.log("Submit Co Issue Category: "+issueCatagory);
-                console.log("Submit Co Issue Description: "+issueDescription);*/
+
                 $.ajax({
                     method: "POST",
                     url: url_createTicket,
@@ -250,11 +234,6 @@
                     },
                     success: function () {
                         $('#ticketTable').DataTable().ajax.reload();
-                        /*$('#selectCo').val("");
-                        $('#assetCo').val("");
-                        $('#issueDate').val("");
-                        $('#issueCategorySelect').val("");
-                        $('#issueDescription').val("");*/
                         $('#createTicket').collapse('toggle');
                         alert('Ticket was successfully generated');
                         $('#assetCo').empty().html('<p style="color: lightgrey">No Inventories Listed - Please chose another company</p>');
@@ -270,8 +249,7 @@
 
             //populate company inventory info
             $('#selectCo').on('change', function () {
-                var coSelectId = $(this).val();
-                //console.log("selected Company id :"+coSelectId);
+                let coSelectId = $(this).val();
                 $.ajax({
                     method: "POST",
                     url: url_popAsset,
@@ -280,15 +258,9 @@
                         _token: session
                     },
                     success: function (data) {
-                        /*console.log("array count: "+data.length);
-                        console.log(data[0].machine_model);
-                        console.log(data[0].machine_serial);
-                        console.log(data[0].id);
-                        console.log(data);*/
                         if(data.length > 0) {
                             $('#assetCo').empty();
                             for (var i = 0; i < (data.length); i++) {
-                                //console.log('data.id: '+data[i].id);
                                 $('#assetCo').append("<input type='radio' name='assetCoRadio' id='assetCoRadio' value='" + data[i].id + "'> " + data[i].machine_model + " || " + data[i].machine_serial + "<br>");
                             }
                         }
@@ -300,9 +272,10 @@
             });
 
             //dataTables
-            var table = $('#ticketTable').DataTable( {
-                pageLength: 5,
+            let table = $('#ticketTable').DataTable( {
+                pageLength: 10,
                 lengthMenu: [5, 10, 25, 50],
+                order: [[0,'desc']],
                 ajax: {
                     url: url_popTable,
                     dataSrc: ""
@@ -354,7 +327,7 @@
                             {
                                 return '<span style="color: darkviolet">Minor</span>'
                             }
-                            else return '<span style="color: blue">No Data</span>'
+                            else return '<span style="color: blue"> -- </span>'
                         }
                     }]
             });
@@ -364,11 +337,8 @@
 
 
             //Ticket Row info on Click
-            $('#ticketTable').off('click').on('click', 'tr', function () {
+            $('#ticketTable').off('click').off('click').on('click', 'tr', function () {
                 let rowData = table.row(this).data();
-                /*console.log(rowData);
-                console.log(rowData.company_name);
-                console.log(rowData.company_id);*/
                 let coId = rowData.company_id;
                 let ticketId = rowData.id;
                 let peekTicketId = null;
@@ -389,9 +359,6 @@
                         ticketId: ticketId
                     },
                     success: function (data) {
-                        //console.log(data);
-                        /*console.log('Data.company.contactName = '+data.company.contactName);
-                        console.log('Data.ticket.asset_model = '+data.ticket.asset_model);*/
                         peekTicketId = data.ticket.id;
                         peekTicketIssueDate = data.ticket.issue_date;
                         peekAddress = data.company.address;
@@ -412,6 +379,10 @@
                         $('#peek-contact-email').html(peekContactEmail);
                     }
                 });
+
+                if(rowData.status == 'Not Active'){
+                    $('#createJobCardBtn').hide();
+                }
                 // Create Job Card sjc_form
                 $('#peek-modal').modal();
                 $('#createJobCardBtn').off('click').on('click', function () {
@@ -442,19 +413,7 @@
                         });//ajax
                     });//#confirm delete
                 });//Delete Ticket
-
-
-                    //console.log(deleteTicketId)
-                    /*if(confirm('Are your Sure you want to Delete Ticket #'+ deleteTicketId)) {
-
-                    }else {return false;}*/
-                });//Ticket Row info on Click
-            });//Document Ready
-
-            $('#make-sjc').tooltip();
-
-
-
-
+            });//Ticket Row info on Click
+        });//Document Ready
     </script>
 @endsection

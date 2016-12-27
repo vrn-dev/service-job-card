@@ -10,6 +10,7 @@ use App\OtherFault;
 use App\RepPart;
 use App\Sjc;
 use App\Ticket;
+use App\User;
 use Illuminate\Support\Facades\Storage;
 use PDF;
 use Illuminate\Http\Request;
@@ -25,6 +26,7 @@ class SjcController extends Controller
     {
         $ticketId = $request['ticketId'];
         $ticket = Ticket::find($ticketId);
+        $username = User::where('username','!=','admin')->pluck('username');
 
         $formData = (object)[
             'ticketId'        => $request['ticketId'],
@@ -38,12 +40,13 @@ class SjcController extends Controller
             'address'         => $ticket->company->address
         ];
 
-        return view('sjc.sjc_form')->with('formData', $formData);
+        return view('sjc.sjc_form')->with(['formData' => $formData, 'username' => $username]);
     }
 
     public function getSjcIndex()
     {
-        return view('sjc.sjc');
+        $username = User::where('username','!=','admin')->pluck('username');
+        return view('sjc.sjc')->with('username', $username);
     }
 
     public function postCreateSjc(Request $request)
@@ -56,7 +59,7 @@ class SjcController extends Controller
 
         if (!(Sjc::where('ticket_id', $ticketId)))
         {
-            return response('found', 200);
+            return response('duplicate', 200);
         }
         else {
 
@@ -209,6 +212,11 @@ class SjcController extends Controller
         $sjc->status = "Completed";
         $sjc->update();
 
+        $ticket = Ticket::find($ticketId);
+        $ticket->issue_category = 'Not Active';
+        $ticket->status = 'Not Active';
+        $ticket->update();
+
         //Generate PDF
 
         $fnwPass = Fnw::where('ticket_id', $ticketId)->pluck('fnw_value')->toArray();
@@ -244,9 +252,14 @@ class SjcController extends Controller
 
         $data = ['ticketId' => $request->ticketId];
 
+
+
         Mail::send('emails.email', $data, function ($message){
+            $mailto = ['vrn.dev@outlook.com','vrn@ronin.dev'];
             $message->from('vrn.njt@outlook.com');
-            $message->to('vrn.dev@outlook.com');
+            foreach($mailto as $email) {
+                $message->to($email);
+            }
             $message->subject('New Job Card');
             $message->attach('storage/job_card.pdf',[
                 'as' => 'JobCard.pdf',
@@ -274,5 +287,3 @@ class SjcController extends Controller
 
 
 }
-//TODO make download link active in modal
-//TODO once the JC is done and status on SJC is set to Completed, move ticket from active ticket table to historical ticket table, make historical ticket table

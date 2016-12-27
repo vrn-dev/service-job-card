@@ -10,50 +10,47 @@ use Illuminate\Support\Facades\Auth;
 
 class InventoryController extends Controller
 {
-    public function getIndex(Request $request)
+    public function getIndex()
     {
-        $search = $request['search'];
-
-        $inventory = Inventory::where('machine_model','like', '%'.$search.'%')
-                        ->orWhere('company_name', 'like', '%'.$search.'%')
-                        ->orderBy('id','asc')->get();
-        $companies = Company::orderBy('companyName','asc')->get();
-        return view('directory.inventory', ['inventory' => $inventory, 'companies' => $companies]);
+       return view('directory.inventory');
     }
-
 
     public function postCreateInventory(Request $request)
     {
         $this->validate($request, [
-            'machine-series' => 'required',
-            'machine-model' => 'required',
-            'machine-serial' => 'required|unique:inventories,machine_serial',
-            'company-id' => 'required',
+            'machineSeries' => 'required',
+            'machineModel' => 'required',
+            'machineSerial' => 'required|unique:inventories,machine_serial',
+            'companyId' => 'required',
         ]);
 
         $inventory = new Inventory();
-        $inventory->machine_series = $request['machine-series'];
-        $inventory->machine_model = $request['machine-model'];
-        $inventory->machine_serial = $request['machine-serial'];
-        $inventory->company_id = $request['company-id'];
+        $inventory->machine_series = $request['machineSeries'];
+        $inventory->machine_model = $request['machineModel'];
+        $inventory->machine_serial = $request['machineSerial'];
+        $inventory->company_id = $request['companyId'];
         $inventory->company_name = $inventory->company->companyName;
-        $message = "There was an error in creating record";
-        if($inventory->save())
-        {
-            $message = "Record was successfully created";
-        }
-        return redirect()->route('inventory.index')->with(['message' => $message]);
+        $inventory->save();
+        return response()->json('Created', 201);
     }
 
 
-    public function getInventoryDelete($inventory_id)
+    public function getInventoryDelete(Request $request)
     {
-        $inventory = Inventory::find($inventory_id);
-        if (Auth::user() != $inventory->user)
-        {
-            redirect()->back();
-        }
+        $serial = $request->machineSerial;
+        $inventory = Inventory::where('machine_serial',$serial)->first();
+
         $inventory->delete();
-        return redirect()->route('inventory.index')->with(['message' => 'Record for '.$inventory->company->companyName.' was successfully deleted']);
+        return response()->json('Deleted', 200);
+    }
+
+    public function popCompanySelect(){
+        $company = Company::pluck('companyName','id');
+        return response()->json($company);
+    }
+
+    public function popTable(){
+        $inventory = Inventory::all();
+        return response()->json($inventory);
     }
 }

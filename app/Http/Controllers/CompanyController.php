@@ -3,33 +3,30 @@
 namespace App\Http\Controllers;
 
 use App\Company;
+use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class CompanyController extends Controller
 {
-//    public function __construct()
-//    {
-//        $this->middleware('auth');
-//    }
-
     public function getDashboard ()
     {
-        return view('sjc.sjc');
+        $username = User::where('username','!=','admin')->pluck('username');
+        return view('sjc.sjc')->with('username', $username);
     }
 
-    public function getCompanyView(Request $request)
+    public function getIndex()
     {
-        $search = $request['search'];
-
-        $companies = Company::
-                        where('companyName','like', '%'.$search.'%')
-                        ->orderBy('id', 'asc')
-                        ->Paginate(10);
-        return view('directory.company', ['companies' => $companies]);
+        return view('directory.company');
     }
 
-    public function postCreateCompany(Request $request, $current_page)
+    public function popTable(){
+        $company = Company::all();
+
+        return response()->json($company);
+    }
+
+    public function postCreateCompany(Request $request)
     {
         $this->validate($request, [
             'companyName' => 'required|max:150|unique:companies,companyName',
@@ -51,11 +48,13 @@ class CompanyController extends Controller
         $company->country = $request['country'];
         $company->address = $request['address'];
         $message = 'There was an error creating the record.';
-        if($request->user()->companies()->save($company))
+        if($company->save())
         {
-            $message = "The Record was successfully created";
+            return response()->json('Created', 201);
         }
-        return redirect()->route('companyView', ['page='.$current_page])->with(['message' => $message]);
+        else {
+            return response()->json('Error', 500);
+        }
     }
 
     public function postEditCompany(Request $request)
@@ -72,10 +71,6 @@ class CompanyController extends Controller
         ]);
 
         $company = Company::find($request['companyId']);
-//        if (Auth::user != $company->user)
-//        {
-//            redirect()->back();
-//        }
         $company->companyName = $request['companyName'];
         $company->contactName = $request['contactName'];
         $company->contactTel = $request['contactTel'];
@@ -85,27 +80,20 @@ class CompanyController extends Controller
         $company->country = $request['country'];
         $company->address = $request['address'];
         $company->update();
-        return response()->json([
-            'new_companyName' => $company->companyName,
-            'new_contactName' => $company->contactName,
-            'new_contactTel'  => $company->contactTel,
-            'new_contactMobile' => $company->contactMobile,
-            'new_contactEmail' => $company->contactEmail,
-            'new_city'        => $company->city,
-            'new_country'     => $company->country,
-            'new_address'     => $company->address
-        ], 200);
+        return response()->json('Updated', 202);
     }
 
-    public function getDeleteCompany($company_id, $current_page)
+    public function getDeleteCompany(Request $request)
     {
-        $company = Company::find($company_id);
-        if (Auth::user() != $company->user)
-        {
-            redirect()->back();
+        $company = Company::find($request->companyId);
+
+        if($company->delete()){
+            return response()->json('OK',200);
         }
-        $company->delete();
-        return redirect()->route('companyView', ['page='.$current_page])->with(['message' => 'Record for '.$company->companyName.' was successfully deleted']);
+        else{
+            return response()->json('Not OK', 500);
+        }
+
     }
 }
 
