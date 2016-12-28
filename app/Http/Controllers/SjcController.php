@@ -255,7 +255,7 @@ class SjcController extends Controller
 
 
         Mail::send('emails.email', $data, function ($message){
-            $mailto = ['vrn.dev@outlook.com','vrn@ronin.dev'];
+            $mailto = ['vrn.dev@outlook.com'];
             $message->from('vrn.njt@outlook.com');
             foreach($mailto as $email) {
                 $message->to($email);
