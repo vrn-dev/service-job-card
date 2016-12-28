@@ -23,7 +23,6 @@ class CreateCompaniesTable extends Migration
             $table->string('city');
             $table->string('country');
             $table->string('address');
-            $table->integer('user_id');
             $table->timestamps();
         });
     }
