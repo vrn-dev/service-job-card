@@ -19,6 +19,7 @@ class CreateInventoriesTable extends Migration
             $table->string('machine_model');
             $table->string('machine_serial')->unique();
             $table->integer('company_id');
+            $table->string('company_name');
             $table->timestamps();
         });
     }
