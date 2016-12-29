@@ -247,7 +247,7 @@ class SjcController extends Controller
             'remarks' => $remarksPass,
             'user' => $request->fae,
         ])->save('/Applications/MAMP/htdocs/service-job-card/storage/app/public/job_card.pdf');
-
+        //])->save('/var/www/laravel/storage/app/public/job_card.pdf'); //if filesystem disks = public
         Storage::copy('public/job_card.pdf', 'public/job_card_history/job_card_'.$ticketId.'.pdf');
         //Storage::copy('job_card.pdf', 'job_card_history/job_card_'.$ticketId.'.pdf'); //if filesystem disks = public
 
@@ -276,6 +276,7 @@ class SjcController extends Controller
     {
         $ticketId = $request->ticketId;
         return response()->download('storage/job_card_history/job_card_'.$ticketId.'.pdf');
+        //return response()->download('/var/www/laravel/storage/app/public/job_card_history/job_card_'.$ticketId.'.pdf'); //if filesystem disks = public
     }
 
 }
