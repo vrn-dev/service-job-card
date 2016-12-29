@@ -155,7 +155,7 @@
             table = $('#sjcTable').DataTable( {
                 pageLength: 10,
                 lengthMenu: [5, 10, 25, 50],
-                order: [3, 'asc'],
+                order: [3, 'desc'],
                 ajax: {
                     url: url_popTable,
                     dataSrc: ""

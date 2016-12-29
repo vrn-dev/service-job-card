@@ -2,22 +2,22 @@
 
 return [
 
-    'driver' => env('MAIL_DRIVER', 'smtp'),
+    'driver' => env('MAIL_DRIVER'),
 
-    'host' => env('MAIL_HOST', 'mailtrap.io'),
+    'host' => env('MAIL_HOST'),
 
-    'port' => env('MAIL_PORT', 25),
+    'port' => env('MAIL_PORT'),
 
     'from' => [
         'address' => 'noreply@vrn.dev',
         'name' => 'VRN.dev',
     ],
 
-    'encryption' => env('MAIL_ENCRYPTION', 'tls'),
+    'encryption' => env('MAIL_ENCRYPTION'),
 
-    'username' => env('MAIL_USERNAME', '692b2d128cfe60'),
+    'username' => env('MAIL_USERNAME'),
 
-    'password' => env('MAIL_PASSWORD', '10d9ec4dc0dbdc'),
+    'password' => env('MAIL_PASSWORD'),
 
     'sendmail' => '/usr/sbin/sendmail -bs',
 

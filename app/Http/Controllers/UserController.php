@@ -8,9 +8,7 @@ use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
-    public function getLogin(){
 
-    }
     public function userSignUp(Request $request)
     {
         $this->validate($request, [

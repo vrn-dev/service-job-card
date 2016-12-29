@@ -4,15 +4,15 @@ return [
 
     'name' => 'Laravel',
 
-    'env' => env('APP_ENV', 'production'),
+    'env' => env('APP_ENV'),
 
-    'debug' => env('APP_DEBUG', false),
-
-
-    'url' => env('APP_URL', 'http://localhost'),
+    'debug' => env('APP_DEBUG'),
 
 
-    'timezone' => 'UTC',
+    'url' => env('APP_URL'),
+
+
+    'timezone' => 'Asia/Dubai',
 
 
     'locale' => 'en',
@@ -26,9 +26,11 @@ return [
     'cipher' => 'AES-256-CBC',
 
 
-    'log' => env('APP_LOG', 'single'),
+    'log' => env('APP_LOG'),
 
-    'log_level' => env('APP_LOG_LEVEL', 'debug'),
+    'log_level' => env('APP_LOG_LEVEL'),
+
+    //'log_max_files' => env(APP_LOG_MAX_FILES), /* Number of days to retain logs if log mode is daily */
 
 
     'providers' => [

@@ -144,7 +144,7 @@
                     <a href="#" class="btn btn-warning" id="createJobCardBtn">Create a Job Card</a>
                     <a href="#" class="btn btn-danger" id="deleteTicketBtn">Delete this Ticket</a>
                     @endif
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal" id="peekModalCloseBtn">Close</button>
                 </div>
             </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
@@ -333,9 +333,6 @@
             });
 
 
-
-
-
             //Ticket Row info on Click
             $('#ticketTable').off('click').off('click').on('click', 'tr', function () {
                 let rowData = table.row(this).data();
@@ -413,6 +410,12 @@
                         });//ajax
                     });//#confirm delete
                 });//Delete Ticket
+
+                $('#peekModalCloseBtn').on('click', function () {
+                    if(!$('#createJobCardBtn').is(':visible')){
+                        $('#createJobCardBtn').show('slow');
+                    }
+                });
             });//Ticket Row info on Click
         });//Document Ready
     </script>

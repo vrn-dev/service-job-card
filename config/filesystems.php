@@ -2,7 +2,7 @@
 
 return [
 
-    'default' => 'local',
+    'default' => env('APP_FILESYSTEM'),
 
     'cloud' => 's3',
 

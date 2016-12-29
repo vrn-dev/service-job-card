@@ -246,17 +246,17 @@ class SjcController extends Controller
             'noc' => $nocPass,
             'remarks' => $remarksPass,
             'user' => $request->fae,
-        ])->save('storage/job_card.pdf');
+        ])->save('/Applications/MAMP/htdocs/service-job-card/storage/app/public/job_card.pdf');
 
         Storage::copy('public/job_card.pdf', 'public/job_card_history/job_card_'.$ticketId.'.pdf');
+        //Storage::copy('job_card.pdf', 'job_card_history/job_card_'.$ticketId.'.pdf'); //if filesystem disks = public
 
         $data = ['ticketId' => $request->ticketId];
 
 
-
         Mail::send('emails.email', $data, function ($message){
-            $mailto = ['vrn.dev@outlook.com'];
-            $message->from('vrn.njt@outlook.com');
+            $mailto = ['ronin.dev@outlook.com'];
+            $message->from('job.card@tradelinkmeltd.com');
             foreach($mailto as $email) {
                 $message->to($email);
             }
@@ -267,15 +267,9 @@ class SjcController extends Controller
             ]);
         });
         Storage::delete('public/job_card.pdf');
-
+        //Storage::delete('job_card.pdf'); //if filesystem disks = public
 
         return redirect()->route('sjc.index');
-    }
-
-    public function testLink()
-    {
-        $ticketId = '12345680';
-        return response()->download('storage/job_card_history/job_card_'.$ticketId.'.pdf');
     }
 
     public function getPdfDownload(Request $request)
@@ -283,7 +277,5 @@ class SjcController extends Controller
         $ticketId = $request->ticketId;
         return response()->download('storage/job_card_history/job_card_'.$ticketId.'.pdf');
     }
-
-
 
 }
