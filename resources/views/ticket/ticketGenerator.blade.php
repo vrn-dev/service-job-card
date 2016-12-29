@@ -378,7 +378,7 @@
                 });
 
                 if(rowData.status == 'Not Active'){
-                    $('#createJobCardBtn').hide();
+                    $('#createJobCardBtn').hide(1);
                 }
                 // Create Job Card sjc_form
                 $('#peek-modal').modal();
@@ -413,7 +413,7 @@
 
                 $('#peekModalCloseBtn').on('click', function () {
                     if(!$('#createJobCardBtn').is(':visible')){
-                        $('#createJobCardBtn').show(500);
+                        $('#createJobCardBtn').show(1000);
                     }
                 });
             });//Ticket Row info on Click
