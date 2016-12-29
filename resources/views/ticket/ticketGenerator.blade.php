@@ -413,7 +413,7 @@
 
                 $('#peekModalCloseBtn').on('click', function () {
                     if(!$('#createJobCardBtn').is(':visible')){
-                        $('#createJobCardBtn').show('slow');
+                        $('#createJobCardBtn').show(500);
                     }
                 });
             });//Ticket Row info on Click
