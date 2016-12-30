@@ -336,7 +336,7 @@
                 </div>
                 <div class="col-md-6">
                     <label for="jobDate">Job Date:</label>
-                    <input type="date" name="jobDate" class="form-control" value="{{ Request::old('jobDate') }}">
+                    <input type="date" name="jobDate" id="jobDate" class="form-control" value="{{ Request::old('jobDate') }}" disabled>
                     <label for="machineHours">Machine Hours:</label>
                     <input type="text" class="form-control" name="machineHours" value="{{ Request::old('machineHours') }}">
                 </div>
@@ -352,55 +352,17 @@
 
 @section('scripts')
     <script>
-
-        /*const url_emailSjc = "route('sjc.email)"; took out blade template {} to get rid of error on VCS
         $(document).ready(function () {
+            //set todays date
+            let date = new Date();
+            let day = date.getDate();
+            let month = date.getMonth()+1;
+            let year = date.getFullYear();
 
-            // Collect form data
-            $(':submit').on('click', function (event) {
-                event.preventDefault();
-
-                // collect fnw otherFault
-                let fnwVal = [];
-                let otherFault = $('#otherFault').val();
-
-                $.each($("input[name='fnw']:checked"), function() {
-                    fnwVal.push($(this).val());
-                });// collect fnw otherFault
-                console.log('fnw value: '+fnwVal)
-                console.log('other Fault: '+otherFault)
-
-                //collect actTaken otherAction
-                let actTaken = [];
-                let otherAction = $('#otherAction').val();
-
-                $.each($("input[name='actTaken']:checked"), function() {
-                    actTaken.push($(this).val());
-                });// collect actTaken otherAction
-                console.log('actTaken value: '+actTaken)
-                console.log('otherAction value '+otherAction)
-
-                //collect repPart
-                let repPart = [];
-
-                $.each($("input[name='repPart']:checked"), function() {
-                    repPart.push($(this).val());
-                });// collect repPart
-                console.log('repPart value: '+repPart)
-
-                //collect noc remarks
-                let nocVal = [];
-                let remarks = $('#remarks').val();
-
-                $.each($("input[name='noc']:checked"), function() {
-                    nocVal.push($(this).val());
-                });// collect noc remarks
-                console.log('noc val: '+nocVal)
-                console.log('remarks: '+remarks)
-
-            });// Collect form data
-
-        }); //Document ready*/
-
+            if (month < 10) month = '0' + month;
+            if (day < 10) day = '0' + day;
+            let today = year+'-'+month+'-'+day;
+            $('#jobDate').val(today);
+        });
     </script>
 @endsection

@@ -39,7 +39,7 @@
 
                                     <div class="col-md-6"> <!-- Generate Ticket Well Column 2-->
                                         <label for="issueDate">Enter Date of Issue</label>
-                                        <input type="date" name="issueDate" class="form-control" id="issueDate">
+                                        <input type="date" name="issueDate" class="form-control" id="issueDate" disabled>
                                         <label for="issueCategory">Issue Category</label>
                                         <select name="issueCategory" id="issueCategorySelect">
                                             <option value="Critical System Down">Critical System Down</option>
@@ -210,6 +210,18 @@
                     }
                 });
             });
+
+            //set todays date
+            let date = new Date();
+            let day = date.getDate();
+            let month = date.getMonth()+1;
+            let year = date.getFullYear();
+
+            if (month < 10) month = '0' + month;
+            if (day < 10) day = '0' + day;
+            let today = year+'-'+month+'-'+day;
+            $('#issueDate').val(today);
+
 
             //submit Create Ticket
             $('#createTicketSubmitBtn').off('click').on('click', function (e) {
