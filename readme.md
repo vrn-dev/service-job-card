@@ -3,9 +3,9 @@
 This guide is to get the Administrator of the Service Job Card Application built for Trade Link Middle East, started on how to use the application and set it up to enable the employees to start using the application in the field.
 The application will accessible on the web browser, please make sure your web-browser is updated to the latest version. It is also recommended to not use this application in Internet Explorer, it is recommended to use the latest version of Google Chrome or Safari across any device or platform.
 Logging In
-Open your browser and go to the web address - http://108.61.177.124/ and enter the following details:
-Username : admin
-Password: password
+Open your browser and go to the web address - and enter the following details:
+Username : 
+Password: 
 After logging in for the first time, look at the top navigation bar and find the ‘Account’ button and click on it.
 
  
